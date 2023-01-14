@@ -1,13 +1,15 @@
 {
-  "name": "TODO-package-name",
+  "name": "scaffold-cli",
   "version": "0.0.1",
   "description": "TODO",
-  "bin": "TODO lib/cjs/index.js",
+  "bin": {
+    "scaffold": "lib/cjs/index.js"
+  },
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "esnext": "lib/esnext/index.js",
   "typings": "lib/esm/index.d.ts",
-  "repository": "https://github.com/lukasbach/{NAME}",
+  "repository": "https://github.com/lukasbach/scaffold-cli",
   "author": "Lukas Bach <npm@lukasbach.com>",
   "license": "MIT",
   "files": [
@@ -46,5 +48,11 @@
     "rimraf": "^3.0.2",
     "typescript": "^4.8.4"
   },
-  "packageManager": "yarn@3.2.4"
+  "volta": {
+    "node": "18.13.0",
+    "yarn": "3.3.1"
+  },
+  "dependencies": {
+    "commander": "^10.0.0"
+  }
 }
