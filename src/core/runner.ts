@@ -1,5 +1,6 @@
 import * as esbuild from "esbuild";
 import path from "path";
+import * as fs from "fs-extra";
 import { TemplateUsageDeclaration } from "../types";
 import { createSdk } from "../sdk/create-sdk";
 import { fileNames, hash } from "../util";
@@ -14,6 +15,8 @@ export class Runner {
   private template: TemplateUsageDeclaration;
 
   private targetPath: string;
+
+  private changedFiles: string[] = [];
 
   async runTemplate(template: TemplateUsageDeclaration, cliArgs: string[], targetPath: string) {
     this.initParameters(cliArgs);
@@ -40,6 +43,22 @@ export class Runner {
 
   getOption(key: string, shortKey?: string) {
     return this.options[key] ?? (shortKey ? this.shortOptions[shortKey] : undefined);
+  }
+
+  getTemplate() {
+    return this.template;
+  }
+
+  getChangedFiles() {
+    return this.changedFiles;
+  }
+
+  getTargetPath() {
+    return this.targetPath;
+  }
+
+  addChangedFiles(...files: string[]) {
+    this.changedFiles.push(...files);
   }
 
   private initParameters(cliArgs: string[]) {

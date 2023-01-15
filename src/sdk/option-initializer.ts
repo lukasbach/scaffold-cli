@@ -1,9 +1,12 @@
 import { ParamType, ParamTypeMap } from "../types";
 import type { ScaffoldSdk } from "./scaffold-sdk";
 import { paramEvaluator } from "../core/param-evaluator";
+import { runner } from "../core/runner";
 
 export class OptionInitializer<T extends ParamType> implements Promise<ParamTypeMap[T]> {
-  private description: string;
+  private shortKey?: string;
+
+  private description?: string;
 
   private isRequired = true;
 
@@ -13,7 +16,12 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
 
   private prom?: Promise<ParamTypeMap[T]>;
 
-  constructor(private key: string, private type: T, private runtime: ScaffoldSdk<any>) {}
+  constructor(private key: string, private type: T, private sdk: ScaffoldSdk<any>) {}
+
+  short(shortKey: string) {
+    this.shortKey = shortKey;
+    return this;
+  }
 
   descr(description: string) {
     this.description = description;
@@ -31,15 +39,19 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
   }
 
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
-    console.log(`Evaluate ${this.key}`, this.description, this.isRequired);
-    return paramEvaluator.evaluate({
-      type: this.type,
-      key: this.key,
-      description: this.description,
-      optional: !this.isRequired,
-      default: this.defaultValue,
-      hint: `Append --${this.key}=value to auto-fill this`,
-    });
+    const value = await paramEvaluator.evaluate(
+      {
+        type: this.type,
+        key: this.key,
+        description: this.description,
+        optional: !this.isRequired,
+        default: this.defaultValue,
+        hint: `Append --${this.key}=value to auto-fill this`,
+      },
+      runner.getOption(this.key, this.shortKey)
+    );
+    this.sdk.setDataProperty(this.key, value);
+    return value;
   }
 
   then<TResult1 = ParamTypeMap[T], TResult2 = never>(
