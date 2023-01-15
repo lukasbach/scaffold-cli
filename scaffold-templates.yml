@@ -1,0 +1,10 @@
+repositories:
+  - ./templates/example
+templates:
+  example: ./templates/example/example-template
+  withDefaults:
+    source: ./templates/example/example-template
+    defaults:
+      optionalStringParam: "Default value"
+      booleanParam: true
+      numberParam: 42

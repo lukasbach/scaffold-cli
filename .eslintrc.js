@@ -36,6 +36,8 @@ module.exports = {
     "no-nested-ternary": "off",
     "react/require-default-props": "off",
     "@typescript-eslint/ban-types": "off",
+    "no-restricted-syntax": "off",
+    "@typescript-eslint/no-shadow": "off"
   },
   ignorePatterns: ["lib", "*.js"],
 };
