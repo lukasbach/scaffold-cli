@@ -1,12 +1,19 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import * as fs from "fs";
+import * as fs from "fs-extra";
 import * as path from "path";
 import { listCommand } from "./commands/list";
+import { newCommand } from "./commands/new";
+import { fileNames } from "./util";
 
-const program = new Command();
+(async () => {
+  const program = new Command();
 
-program.version(JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), { encoding: "utf-8" })).version);
-program.addCommand(listCommand);
+  await fs.ensureDir(fileNames.tempDir);
 
-program.parse(process.argv);
+  program.version(JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), { encoding: "utf-8" })).version);
+  program.addCommand(listCommand);
+  program.addCommand(newCommand);
+
+  program.parse(process.argv);
+})();

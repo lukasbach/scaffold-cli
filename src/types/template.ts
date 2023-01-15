@@ -13,12 +13,14 @@ export type TemplateRootYaml = {
   templates: Record<string, string | TemplateUsageDeclaration>;
 };
 
-export type ParamConfig<T extends keyof ParamTypeMap> = {
+export type ParamConfig<T extends ParamType> = {
   description?: string;
   type: T;
   required?: boolean;
   default?: ParamTypeMap[T];
 };
+
+export type ParamType = keyof ParamTypeMap;
 
 export type ParamTypeMap = {
   string: string;

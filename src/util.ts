@@ -1,5 +1,8 @@
 import * as fs from "fs-extra";
+import * as crypto from "crypto";
 import { parse } from "yaml";
+import path from "path";
+import os from "os";
 
 export const readYaml = async <T = any>(filePath: string): Promise<T> =>
   parse(await fs.readFile(filePath, { encoding: "utf-8" }));
@@ -12,4 +15,11 @@ export const promisePool = async (callback: (run: (...proms: Promise<any>[]) => 
     promises.push(...proms);
   });
   await Promise.all(promises);
+};
+
+export const hash = (str: string) => crypto.createHash("sha1").update(str).digest("hex");
+
+export const fileNames = {
+  templateRoot: "scaffold-templates.yml",
+  tempDir: path.join(os.tmpdir(), "scaffold-cli"),
 };

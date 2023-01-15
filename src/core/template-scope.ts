@@ -1,7 +1,6 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { fileNames } from "../globals";
-import { isNotNullish, promisePool, readYaml } from "../util";
+import { fileNames, isNotNullish, promisePool, readYaml } from "../util";
 import { TemplateRootData, TemplateUsageDeclaration } from "../types";
 
 export class TemplateScope {
