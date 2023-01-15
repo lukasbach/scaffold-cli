@@ -6,6 +6,8 @@ const isParamType = <T extends ParamType>(type: T, param: ParamConfig<any, any>)
   type === param.type;
 
 export class ParamEvaluator {
+  public readonly paramTypes: ParamType[] = ["string", "number", "boolean"];
+
   evaluate<T extends keyof ParamTypeMap, O extends boolean = false>(
     param: ParamConfig<T, O>,
     cliValue?: string | true
@@ -34,11 +36,11 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: "input",
-          name: param.name,
+          name: param.key,
           message: param.description,
           default: param.default,
         })
-      )[param.name] as string;
+      )[param.key] as string;
     }
 
     return undefined;
@@ -52,11 +54,11 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: "number",
-          name: param.name,
+          name: param.key,
           message: param.description,
           default: param.default,
         })
-      )[param.name];
+      )[param.key];
     }
 
     return undefined;
@@ -70,11 +72,11 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: "confirm",
-          name: param.name,
+          name: param.key,
           message: param.description,
           default: param.default,
         })
-      )[param.name];
+      )[param.key];
     }
 
     return undefined;

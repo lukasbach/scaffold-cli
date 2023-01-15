@@ -4,7 +4,7 @@
     "declaration": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "module": "CommonJS",
+    "module": "Node16",
     "target": "ES6",
     "moduleResolution": "Node"
   },

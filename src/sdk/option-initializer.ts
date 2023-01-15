@@ -30,11 +30,11 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
     return this.optional();
   }
 
-  private async evaluate(): Promise<ParamTypeMap[T]> {
+  private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
     console.log(`Evaluate ${this.key}`, this.description, this.isRequired);
     return paramEvaluator.evaluate({
       type: this.type,
-      name: this.key,
+      key: this.key,
       description: this.description,
       optional: !this.isRequired,
       default: this.defaultValue,

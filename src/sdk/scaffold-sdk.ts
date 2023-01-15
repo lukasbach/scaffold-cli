@@ -2,7 +2,8 @@ import { RuntimeData } from "./types";
 import { OptionInitializer } from "./option-initializer";
 import { templateScope } from "../core/template-scope";
 import { ArgumentConfig, initializeArgument } from "./initialize-argument";
-import { ParamType } from "../types";
+import { paramEvaluator } from "../core/param-evaluator";
+import { ParamType, ParamTypeMap } from "../types";
 
 export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {} };
@@ -26,25 +27,25 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
-  public textArgument(name: string, config: ArgumentConfig<"string">) {
-    return initializeArgument(name, "string", config);
-  }
+  public readonly argument = paramEvaluator.paramTypes.reduce<{
+    [key in ParamType]: (name: string, config?: ArgumentConfig<key>) => Promise<ParamTypeMap[key]>;
+  }>(
+    (map, type) => ({
+      ...map,
+      [type]: (key: string, config?: ArgumentConfig<any>) => initializeArgument(key, type, config),
+    }),
+    {} as any
+  );
 
-  public numberArgument(name: string, config: ArgumentConfig<"number">) {
-    return initializeArgument(name, "number", config);
-  }
-
-  public text(key: string) {
-    return new OptionInitializer(key, "string", this);
-  }
-
-  public number(key: string) {
-    return new OptionInitializer(key, "number", this);
-  }
-
-  public boolean(key: string) {
-    return new OptionInitializer(key, "boolean", this);
-  }
+  public readonly option = paramEvaluator.paramTypes.reduce<{
+    [key in ParamType]: (name: string) => OptionInitializer<key>;
+  }>(
+    (map, type) => ({
+      ...map,
+      [type]: (key: string) => new OptionInitializer(key, type, this),
+    }),
+    {} as any
+  );
 
   public withAction<K extends string, A extends (...args: any[]) => any>(actionKey: K, action: A) {
     this.runtimeData.actions[actionKey] = action;

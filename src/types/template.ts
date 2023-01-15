@@ -9,7 +9,7 @@ export type TemplateRootYaml = {
 };
 
 export type ParamConfig<T extends ParamType, O extends boolean = boolean> = {
-  name: string;
+  key: string;
   description?: string;
   type: T;
   optional?: O;
