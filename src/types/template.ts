@@ -3,21 +3,18 @@ export type TemplateRepoYaml = {
   author?: string;
 };
 
-export type TemplateConfigYaml = {
-  name: string;
-  inputs: Record<string, ParamConfig<any>>;
-};
-
 export type TemplateRootYaml = {
   repositories: string[];
   templates: Record<string, string | TemplateUsageDeclaration>;
 };
 
-export type ParamConfig<T extends ParamType> = {
+export type ParamConfig<T extends ParamType, O extends boolean = boolean> = {
+  name: string;
   description?: string;
   type: T;
-  required?: boolean;
+  optional?: O;
   default?: ParamTypeMap[T];
+  hint?: string;
 };
 
 export type ParamType = keyof ParamTypeMap;

@@ -29,7 +29,6 @@ export class Runner {
       outfile,
     });
 
-    global.properties = properties;
     global.createSdk = createSdk;
 
     await import(`file://${outfile}`);

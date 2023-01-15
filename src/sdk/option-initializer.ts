@@ -1,7 +1,8 @@
 import { ParamType, ParamTypeMap } from "../types";
 import type { ScaffoldSdk } from "./scaffold-sdk";
+import { paramEvaluator } from "../core/param-evaluator";
 
-export class PropertyInitializer<T extends ParamType> implements Promise<ParamTypeMap[T]> {
+export class OptionInitializer<T extends ParamType> implements Promise<ParamTypeMap[T]> {
   private description: string;
 
   private isRequired = true;
@@ -31,7 +32,14 @@ export class PropertyInitializer<T extends ParamType> implements Promise<ParamTy
 
   private async evaluate(): Promise<ParamTypeMap[T]> {
     console.log(`Evaluate ${this.key}`, this.description, this.isRequired);
-    return null as any;
+    return paramEvaluator.evaluate({
+      type: this.type,
+      name: this.key,
+      description: this.description,
+      optional: !this.isRequired,
+      default: this.defaultValue,
+      hint: `Append --${this.key}=value to auto-fill this`,
+    });
   }
 
   then<TResult1 = ParamTypeMap[T], TResult2 = never>(

@@ -1,6 +1,8 @@
 import { RuntimeData } from "./types";
-import { PropertyInitializer } from "./PropertyInitializer";
+import { OptionInitializer } from "./option-initializer";
 import { templateScope } from "../core/template-scope";
+import { ArgumentConfig, initializeArgument } from "./initialize-argument";
+import { ParamType } from "../types";
 
 export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {} };
@@ -24,16 +26,24 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
+  public textArgument(name: string, config: ArgumentConfig<"string">) {
+    return initializeArgument(name, "string", config);
+  }
+
+  public numberArgument(name: string, config: ArgumentConfig<"number">) {
+    return initializeArgument(name, "number", config);
+  }
+
   public text(key: string) {
-    return new PropertyInitializer(key, "string", this);
+    return new OptionInitializer(key, "string", this);
   }
 
   public number(key: string) {
-    return new PropertyInitializer(key, "number", this);
+    return new OptionInitializer(key, "number", this);
   }
 
   public boolean(key: string) {
-    return new PropertyInitializer(key, "boolean", this);
+    return new OptionInitializer(key, "boolean", this);
   }
 
   public withAction<K extends string, A extends (...args: any[]) => any>(actionKey: K, action: A) {

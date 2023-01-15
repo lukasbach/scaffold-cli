@@ -37,7 +37,9 @@ module.exports = {
     "react/require-default-props": "off",
     "@typescript-eslint/ban-types": "off",
     "no-restricted-syntax": "off",
-    "@typescript-eslint/no-shadow": "off"
+    "@typescript-eslint/no-shadow": "off",
+    "no-plusplus": "off",
+    "class-methods-use-this": "off"
   },
   ignorePatterns: ["lib", "*.js"],
 };
