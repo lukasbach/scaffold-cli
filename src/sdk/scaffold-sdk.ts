@@ -1,8 +1,9 @@
 import { RuntimeData } from "./types";
 import { PropertyInitializer } from "./PropertyInitializer";
+import { templateScope } from "../core/template-scope";
 
 export class ScaffoldSdk<T extends RuntimeData> {
-  private runtimeData: RuntimeData = { actions: {}, conditions: {} };
+  private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {} };
 
   public readonly actions = new Proxy(
     {},
@@ -46,5 +47,18 @@ export class ScaffoldSdk<T extends RuntimeData> {
   ) {
     this.runtimeData.conditions[conditionKey] = condition;
     return this as ScaffoldSdk<T & { conditions: T["conditions"] & { [k in K]: C } }>;
+  }
+
+  public setDataProperty<T>(dataPath: string, value: T) {
+    const pieces = dataPath.split(".");
+    const parent = pieces.slice(0, -1).reduce((data, key) => {
+      if (!data[key]) {
+        // eslint-disable-next-line no-param-reassign
+        data[key] = {};
+      }
+      return data[key];
+    }, this.runtimeData.data);
+    parent[pieces[pieces.length - 1]] = value;
+    console.log(templateScope.getTemplates());
   }
 }
