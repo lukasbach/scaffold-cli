@@ -8,6 +8,15 @@ export const createSdk = () => {
       const templateContents = await sdk.getTemplateFileContents(templateFile);
       await sdk.writeToTarget(sdk.fillTemplate(target), sdk.fillTemplate(templateContents));
     })
+    .withAction("addInlineTemplate", async (target: string, template: string) => {
+      await sdk.writeToTarget(sdk.fillTemplate(target), sdk.fillTemplate(template));
+    })
+    .withAction("replaceInFile", async (target: string, regex: RegExp | string, replaceWith: string) => {
+      const targetPath = sdk.fillTemplate(target);
+      const originalContents = await sdk.getTemplateFileContents(targetPath);
+      const replacedContents = originalContents.replace(regex, replaceWith);
+      await sdk.writeToTarget(targetPath, replacedContents);
+    })
     .withHelper("camelCase", changeCase.camelCase)
     .withHelper("capitalCase", changeCase.capitalCase)
     .withHelper("constantCase", changeCase.constantCase)

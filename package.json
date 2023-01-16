@@ -57,6 +57,7 @@
     "fs-extra": "^11.1.0",
     "handlebars": "^4.7.7",
     "inquirer": "^8.2.5",
+    "ts-deepmerge": "^5.0.0",
     "ts-morph": "^17.0.1",
     "yaml": "^2.2.1"
   },

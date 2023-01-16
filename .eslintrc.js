@@ -1,6 +1,5 @@
 module.exports = {
   env: {
-    browser: true,
     es2021: true,
     node: true,
     jest: true,
@@ -39,7 +38,8 @@ module.exports = {
     "no-restricted-syntax": "off",
     "@typescript-eslint/no-shadow": "off",
     "no-plusplus": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "import/no-cycle": "off"
   },
   ignorePatterns: ["lib", "*.js"],
 };

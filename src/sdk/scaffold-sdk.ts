@@ -1,6 +1,7 @@
 import * as fs from "fs-extra";
 import path from "path";
 import { HelperDelegate, Template } from "handlebars";
+import merge from "ts-deepmerge";
 import { RuntimeData } from "./types";
 import { OptionInitializer } from "./option-initializer";
 import { ArgumentConfig, initializeArgument } from "./initialize-argument";
@@ -10,6 +11,11 @@ import { runner } from "../core/runner";
 
 export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {}, partials: {}, helpers: {} };
+
+  /** @private */
+  public get internalRuntimeData() {
+    return this.runtimeData;
+  }
 
   public get template() {
     return runner.getTemplate();
@@ -109,6 +115,23 @@ export class ScaffoldSdk<T extends RuntimeData> {
   ): ScaffoldSdk<T & { partials: T["partials"] & { [k in K]: P } }> {
     this.handlebars.registerPartial(name, partial);
     this.runtimeData.partials[name] = partial;
+    return this as any;
+  }
+
+  mergeWith<O extends RuntimeData>(
+    otherSdk: ScaffoldSdk<O>
+  ): ScaffoldSdk<{
+    actions: T["actions"] & O["actions"];
+    conditions: T["conditions"] & O["conditions"];
+    helpers: T["helpers"] & O["helpers"];
+    partials: T["partials"] & O["partials"];
+    data: T["data"] & O["data"];
+  }> {
+    Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
+    Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
+    Object.entries(otherSdk.internalRuntimeData.helpers).forEach(([key, value]) => this.withHelper(key, value));
+    Object.entries(otherSdk.internalRuntimeData.partials).forEach(([key, value]) => this.withPartial(key, value));
+    this.runtimeData.data = merge(this.getData, otherSdk.getData());
     return this as any;
   }
 
