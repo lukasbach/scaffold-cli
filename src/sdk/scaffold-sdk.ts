@@ -78,29 +78,38 @@ export class ScaffoldSdk<T extends RuntimeData> {
     {} as any
   );
 
-  withAction<K extends string, A extends (...args: any[]) => any>(actionKey: K, action: A) {
+  withAction<K extends string, A extends (...args: any[]) => any>(
+    actionKey: K,
+    action: A
+  ): ScaffoldSdk<T & { actions: T["actions"] & { [k in K]: A } }> {
     this.runtimeData.actions[actionKey] = action;
-    return this as ScaffoldSdk<T & { actions: T["actions"] & { [k in K]: A } }>;
+    return this as any;
   }
 
   withCondition<K extends string, C extends (...args: any[]) => boolean | Promise<boolean>>(
     conditionKey: K,
     condition: C
-  ) {
+  ): ScaffoldSdk<T & { conditions: T["conditions"] & { [k in K]: C } }> {
     this.runtimeData.conditions[conditionKey] = condition;
-    return this as ScaffoldSdk<T & { conditions: T["conditions"] & { [k in K]: C } }>;
+    return this as any;
   }
 
-  withHelper<K extends string, H extends HelperDelegate>(name: K, helper: H) {
+  withHelper<K extends string, H extends HelperDelegate>(
+    name: K,
+    helper: H
+  ): ScaffoldSdk<T & { helpers: T["helpers"] & { [k in K]: H } }> {
     this.handlebars.registerHelper(name, helper);
     this.runtimeData.helpers[name] = helper;
-    return this as ScaffoldSdk<T & { helpers: T["helpers"] & { [k in K]: H } }>;
+    return this as any;
   }
 
-  withPartial<K extends string, P extends Template>(name: K, partial: P) {
+  withPartial<K extends string, P extends Template>(
+    name: K,
+    partial: P
+  ): ScaffoldSdk<T & { partials: T["partials"] & { [k in K]: P } }> {
     this.handlebars.registerPartial(name, partial);
     this.runtimeData.partials[name] = partial;
-    return this as ScaffoldSdk<T & { partials: T["partials"] & { [k in K]: P } }>;
+    return this as any;
   }
 
   setDataProperty<T>(dataPath: string, value: T) {
