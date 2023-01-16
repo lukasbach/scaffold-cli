@@ -2,15 +2,20 @@ import * as fs from "fs-extra";
 import path from "path";
 import { HelperDelegate, Template } from "handlebars";
 import merge from "ts-deepmerge";
+import { Project as TsProject } from "ts-morph";
 import { RuntimeData } from "./types";
 import { OptionInitializer } from "./option-initializer";
 import { ArgumentConfig, initializeArgument } from "./initialize-argument";
 import { paramEvaluator } from "../core/param-evaluator";
 import { ParamType, ParamTypeMap } from "../types";
 import { runner } from "../core/runner";
+import { getAllParentPaths } from "../util";
+import { logger } from "../core/logger";
 
 export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {}, partials: {}, helpers: {} };
+
+  private tsProject?: TsProject;
 
   /** @private */
   public get internalRuntimeData() {
@@ -50,7 +55,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     {
       get:
         (_, helperKey: string) =>
-        async (...params) =>
+        (...params) =>
           this.runtimeData.helpers[helperKey](...params),
     }
   ) as {
@@ -163,5 +168,32 @@ export class ScaffoldSdk<T extends RuntimeData> {
     const fullPath = path.join(this.targetPath, relativePath);
     runner.addChangedFiles(fullPath);
     return fs.writeFile(fullPath, contents);
+  }
+
+  async getTsProject() {
+    if (!this.tsProject) {
+      const projectRoot = (
+        await Promise.all(
+          getAllParentPaths(this.targetPath).map(async folder => ({ folder, items: await fs.readdir(folder) }))
+        )
+      ).find(({ items }) => items.includes("tsconfig.json"))?.folder;
+      if (!projectRoot) {
+        throw new Error("Could not find a tsconfig.json in any parent folder");
+      }
+      logger.debug(`Found TypeScript Project root at ${projectRoot}`);
+      this.tsProject = new TsProject({
+        tsConfigFilePath: path.join(projectRoot, "tsconfig.json"),
+        skipAddingFilesFromTsConfig: true,
+      });
+    }
+    return this.tsProject;
+  }
+
+  async getTsSourceFile(filePath: string) {
+    return (await this.getTsProject()).getSourceFile(filePath);
+  }
+
+  getChangedFiles() {
+    return runner.getChangedFiles();
   }
 }

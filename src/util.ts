@@ -23,3 +23,8 @@ export const fileNames = {
   templateRoot: "scaffold-templates.yml",
   tempDir: path.join(os.tmpdir(), "scaffold-cli"),
 };
+
+export const getAllParentPaths = (folder: string) => {
+  const pieces = path.normalize(folder).split(path.sep);
+  return pieces.map((_, i) => pieces.slice(0, i + 1).join(path.sep)).reverse();
+};

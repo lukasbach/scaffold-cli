@@ -5,7 +5,7 @@ import { ScaffoldSdk } from "./scaffold-sdk";
 
 let argumentCount = 0;
 
-export type ArgumentConfig<T extends ParamType> = Omit<ParamConfig<T>, "name" | "type"> & { index?: number };
+export type ArgumentConfig<T extends ParamType> = Omit<Partial<ParamConfig<T>>, "name" | "type"> & { index?: number };
 export const initializeArgument = async (
   key: string,
   type: keyof ParamTypeMap,

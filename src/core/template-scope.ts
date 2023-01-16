@@ -1,6 +1,6 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { fileNames, isNotNullish, promisePool, readYaml } from "../util";
+import { fileNames, getAllParentPaths, isNotNullish, promisePool, readYaml } from "../util";
 import { TemplateRootData, TemplateUsageDeclaration } from "../types";
 
 export class TemplateScope {
@@ -48,8 +48,7 @@ export class TemplateScope {
   }
 
   private getAllParentPaths() {
-    const pieces = path.normalize(this.cwd).split(path.sep);
-    return pieces.map((_, i) => pieces.slice(0, i + 1).join(path.sep)).reverse();
+    return getAllParentPaths(this.cwd);
   }
 
   private async initRepository(repoPath: string) {

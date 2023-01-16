@@ -1,4 +1,5 @@
 import * as changeCase from "change-case";
+import { ImportDeclarationStructure, OptionalKind } from "ts-morph";
 import { ScaffoldSdk } from "./scaffold-sdk";
 
 export const createSdk = () => {
@@ -16,6 +17,24 @@ export const createSdk = () => {
       const originalContents = await sdk.getTemplateFileContents(targetPath);
       const replacedContents = originalContents.replace(regex, replaceWith);
       await sdk.writeToTarget(targetPath, replacedContents);
+    })
+    .withAction("tsAddImport", async (target: string, importDecl: OptionalKind<ImportDeclarationStructure>) => {
+      const file = await sdk.getTsSourceFile(target);
+      file?.addImportDeclaration(importDecl);
+      file?.organizeImports();
+    })
+    .withAction("tsAddListItem", async (target: string) => {
+      const file = await sdk.getTsSourceFile(target);
+      console.log(file?.getAncestors());
+    })
+    .withAction("tsSave", async () => {
+      const project = await sdk.getTsProject();
+      await project.save();
+    })
+    .withAction("tsFormat", async () => {
+      (await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)))).forEach(file =>
+        file?.formatText()
+      );
     })
     .withHelper("camelCase", changeCase.camelCase)
     .withHelper("capitalCase", changeCase.capitalCase)

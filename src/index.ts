@@ -16,4 +16,7 @@ import { fileNames } from "./util";
   program.addCommand(newCommand);
 
   program.parse(process.argv);
+  const myList = ["a", 1];
 })();
+
+const global = ["a", 1];
