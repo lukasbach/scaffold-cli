@@ -1,5 +1,6 @@
 import * as fs from "fs-extra";
 import path from "path";
+import { HelperDelegate, Template } from "handlebars";
 import { RuntimeData } from "./types";
 import { OptionInitializer } from "./option-initializer";
 import { ArgumentConfig, initializeArgument } from "./initialize-argument";
@@ -8,7 +9,7 @@ import { ParamType, ParamTypeMap } from "../types";
 import { runner } from "../core/runner";
 
 export class ScaffoldSdk<T extends RuntimeData> {
-  private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {} };
+  private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {}, partials: {}, helpers: {} };
 
   public get template() {
     return runner.getTemplate();
@@ -16,6 +17,14 @@ export class ScaffoldSdk<T extends RuntimeData> {
 
   public get targetPath() {
     return runner.getTargetPath();
+  }
+
+  public get handlebars() {
+    return runner.handlebars;
+  }
+
+  public get hb() {
+    return this.handlebars;
   }
 
   readonly actions = new Proxy(
@@ -28,6 +37,18 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as {
     [key in keyof T["actions"]]: (...args: Parameters<T["actions"][key]>) => Promise<ReturnType<T["actions"][key]>>;
+  };
+
+  readonly helper = new Proxy(
+    {},
+    {
+      get:
+        (_, helperKey: string) =>
+        async (...params) =>
+          this.runtimeData.helpers[helperKey](...params),
+    }
+  ) as {
+    [key in keyof T["helpers"]]: (...args: Parameters<T["helpers"][key]>) => ReturnType<T["helpers"][key]>;
   };
 
   readonly conditions = new Proxy(
@@ -70,6 +91,18 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as ScaffoldSdk<T & { conditions: T["conditions"] & { [k in K]: C } }>;
   }
 
+  withHelper<K extends string, H extends HelperDelegate>(name: K, helper: H) {
+    this.handlebars.registerHelper(name, helper);
+    this.runtimeData.helpers[name] = helper;
+    return this as ScaffoldSdk<T & { helpers: T["helpers"] & { [k in K]: H } }>;
+  }
+
+  withPartial<K extends string, P extends Template>(name: K, partial: P) {
+    this.handlebars.registerPartial(name, partial);
+    this.runtimeData.partials[name] = partial;
+    return this as ScaffoldSdk<T & { partials: T["partials"] & { [k in K]: P } }>;
+  }
+
   setDataProperty<T>(dataPath: string, value: T) {
     const pieces = dataPath.split(".");
     const parent = pieces.slice(0, -1).reduce((data, key) => {
@@ -88,6 +121,10 @@ export class ScaffoldSdk<T extends RuntimeData> {
 
   async getTemplateFileContents(relativePath: string) {
     return fs.readFile(path.join(this.template.source, relativePath), { encoding: "utf-8" });
+  }
+
+  fillTemplate(template: string) {
+    return this.handlebars.compile(template)(this.getData());
   }
 
   async writeToTarget(relativePath: string, contents: string) {

@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import path from "path";
 import * as fs from "fs-extra";
+import * as handlebars from "handlebars";
 import { TemplateUsageDeclaration } from "../types";
 import { createSdk } from "../sdk/create-sdk";
 import { fileNames, hash } from "../util";
@@ -17,6 +18,8 @@ export class Runner {
   private targetPath: string;
 
   private changedFiles: string[] = [];
+
+  public readonly handlebars = handlebars.create();
 
   async runTemplate(template: TemplateUsageDeclaration, cliArgs: string[], targetPath: string) {
     this.initParameters(cliArgs);

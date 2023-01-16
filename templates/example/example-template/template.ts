@@ -7,5 +7,6 @@ import "../../../src/globals";
   console.log("options:", await sdk.option.string("string"), await sdk.option.number("number").default(""));
   sdk.setDataProperty("a.b.c", 123);
   console.log("data is ", sdk.getData());
+  console.log(sdk.helper.camelCase("Hello World this is a captial case test"));
   await sdk.actions.addFile("template-file.md", "{{first-arg}}.md");
 })();
