@@ -54,9 +54,12 @@
     "change-case": "^4.1.2",
     "commander": "^10.0.0",
     "esbuild": "^0.17.0",
+    "execa": "^6.1.0",
     "fs-extra": "^11.1.0",
     "handlebars": "^4.7.7",
     "inquirer": "^8.2.5",
+    "node-fetch": "^3.3.0",
+    "simple-git": "^3.16.0",
     "ts-deepmerge": "^5.0.0",
     "ts-morph": "^17.0.1",
     "yaml": "^2.2.1"

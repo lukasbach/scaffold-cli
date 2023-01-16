@@ -190,10 +190,16 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   async getTsSourceFile(filePath: string) {
-    return (await this.getTsProject()).getSourceFile(filePath);
+    const project = await this.getTsProject();
+    return project.getSourceFile(filePath) ?? project.addSourceFileAtPath(filePath);
+    // return project.getSourceFile(filePath);
   }
 
   getChangedFiles() {
     return runner.getChangedFiles();
+  }
+
+  registerChangedFiles(...targets: string[]) {
+    runner.addChangedFiles(...targets.map(target => path.join(this.targetPath, target)));
   }
 }

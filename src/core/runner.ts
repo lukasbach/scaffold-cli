@@ -1,10 +1,8 @@
 import * as esbuild from "esbuild";
 import path from "path";
-import * as fs from "fs-extra";
 import * as handlebars from "handlebars";
-import { TemplateUsageDeclaration } from "../types";
-import { createSdk } from "../sdk/create-sdk";
 import { fileNames, hash } from "../util";
+import { TemplateUsageDeclaration } from "../types";
 
 export class Runner {
   private arguments: string[] = [];
@@ -34,8 +32,6 @@ export class Runner {
       allowOverwrite: true,
       outfile,
     });
-
-    global.createSdk = createSdk;
 
     await import(`file://${outfile}`);
   }

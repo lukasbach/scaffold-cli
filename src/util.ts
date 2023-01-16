@@ -1,8 +1,8 @@
-import * as fs from "fs-extra";
 import * as crypto from "crypto";
-import { parse } from "yaml";
-import path from "path";
+import * as fs from "fs-extra";
 import os from "os";
+import path from "path";
+import { parse } from "yaml";
 
 export const readYaml = async <T = any>(filePath: string): Promise<T> =>
   parse(await fs.readFile(filePath, { encoding: "utf-8" }));

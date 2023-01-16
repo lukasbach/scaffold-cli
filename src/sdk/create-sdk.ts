@@ -20,21 +20,32 @@ export const createSdk = () => {
     })
     .withAction("tsAddImport", async (target: string, importDecl: OptionalKind<ImportDeclarationStructure>) => {
       const file = await sdk.getTsSourceFile(target);
-      file?.addImportDeclaration(importDecl);
-      file?.organizeImports();
+      file.addImportDeclaration(importDecl);
+      await file.save();
+      sdk.registerChangedFiles(target);
+    })
+    .withAction("tsOrganizeImports", async (target: string) => {
+      const file = await sdk.getTsSourceFile(target);
+      file.organizeImports();
+      await file.save();
+      sdk.registerChangedFiles(target);
     })
     .withAction("tsAddListItem", async (target: string) => {
       const file = await sdk.getTsSourceFile(target);
       console.log(file?.getAncestors());
+      sdk.registerChangedFiles(target);
     })
     .withAction("tsSave", async () => {
-      const project = await sdk.getTsProject();
-      await project.save();
+      // const project = await sdk.getTsProject();
+      // await project.save();
     })
     .withAction("tsFormat", async () => {
       (await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)))).forEach(file =>
         file?.formatText()
       );
+    })
+    .withAction("eslint", async () => {
+      await $(`npx eslint --fix ${sdk.getChangedFiles().join(" ")}`);
     })
     .withHelper("camelCase", changeCase.camelCase)
     .withHelper("capitalCase", changeCase.capitalCase)
