@@ -196,7 +196,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   getChangedFiles() {
-    return runner.getChangedFiles();
+    return [...runner.getChangedFiles().values()];
   }
 
   registerChangedFiles(...targets: string[]) {

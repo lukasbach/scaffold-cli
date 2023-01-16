@@ -35,10 +35,6 @@ export const createSdk = () => {
       console.log(file?.getAncestors());
       sdk.registerChangedFiles(target);
     })
-    .withAction("tsSave", async () => {
-      // const project = await sdk.getTsProject();
-      // await project.save();
-    })
     .withAction("tsFormat", async () => {
       (await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)))).forEach(file =>
         file?.formatText()

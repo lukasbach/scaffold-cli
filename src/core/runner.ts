@@ -15,7 +15,7 @@ export class Runner {
 
   private targetPath: string;
 
-  private changedFiles: string[] = [];
+  private changedFiles = new Set<string>();
 
   public readonly handlebars = handlebars.create();
 
@@ -57,7 +57,9 @@ export class Runner {
   }
 
   addChangedFiles(...files: string[]) {
-    this.changedFiles.push(...files);
+    for (const file of files) {
+      this.changedFiles.add(file);
+    }
   }
 
   private initParameters(cliArgs: string[]) {
