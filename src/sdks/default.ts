@@ -5,6 +5,7 @@ import { createEmptySdk } from "./empty";
 export const createDefaultSdk = () => {
   const sdk = createEmptySdk();
   return sdk
+    .withHelper("ifEquals", (arg1, arg2, options) => (arg1 === arg2 ? options.fn(this) : options.inverse(this)))
     .withAction("addFile", async (templateFile: string, target: string) => {
       const templateContents = await sdk.getTemplateFileContents(templateFile);
       await sdk.writeToTarget(sdk.fillTemplate(target), sdk.fillTemplate(templateContents));

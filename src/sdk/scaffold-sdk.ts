@@ -4,10 +4,9 @@ import { HelperDelegate, Template } from "handlebars";
 import merge from "ts-deepmerge";
 import { Project as TsProject } from "ts-morph";
 import { RuntimeData } from "./types";
-import { OptionInitializer } from "./option-initializer";
-import { ArgumentConfig, initializeArgument } from "./initialize-argument";
+import { ParameterInitializer } from "./parameter-initializer";
 import { paramEvaluator } from "../core/param-evaluator";
-import { ParamType, ParamTypeMap } from "../types";
+import { ParamType } from "../types";
 import { runner } from "../core/runner";
 import { getAllParentPaths } from "../util";
 import { logger } from "../core/logger";
@@ -86,22 +85,12 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["parameterSets"]]: (...args: Parameters<T["parameterSets"][key]>) => Promise<boolean> };
 
-  readonly argument = paramEvaluator.paramTypes.reduce<{
-    [key in ParamType]: (name: string, config?: ArgumentConfig<key>) => Promise<ParamTypeMap[key]>;
+  readonly param = paramEvaluator.paramTypes.reduce<{
+    [key in ParamType]: (name: string) => ParameterInitializer<key>;
   }>(
     (map, type) => ({
       ...map,
-      [type]: (key: string, config?: ArgumentConfig<any>) => initializeArgument(key, type, this, config),
-    }),
-    {} as any
-  );
-
-  readonly option = paramEvaluator.paramTypes.reduce<{
-    [key in ParamType]: (name: string) => OptionInitializer<key>;
-  }>(
-    (map, type) => ({
-      ...map,
-      [type]: (key: string) => new OptionInitializer(key, type, this),
+      [type]: (key: string) => new ParameterInitializer(key, type, this),
     }),
     {} as any
   );
@@ -134,7 +123,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
   withParameterSet<K extends string, S extends RuntimeData["parameterSets"][string]>(
     name: K,
     parameterSet: S
-  ): ScaffoldSdk<T & { parameterSet: T["parameterSets"] & { [k in K]: S } }> {
+  ): ScaffoldSdk<T & { parameterSets: T["parameterSets"] & { [k in K]: S } }> {
     this.runtimeData.parameterSets[name] = parameterSet;
     return this as any;
   }

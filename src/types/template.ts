@@ -1,3 +1,5 @@
+import { DistinctChoice } from "inquirer";
+
 export type TemplateRepoYaml = {
   name?: string;
   author?: string;
@@ -15,6 +17,7 @@ export type ParamConfig<T extends ParamType, O extends boolean = boolean> = {
   optional?: O;
   default?: ParamTypeMap[T];
   hint?: string;
+  choices?: DistinctChoice[];
 };
 
 export type ParamType = keyof ParamTypeMap;
@@ -23,6 +26,7 @@ export type ParamTypeMap = {
   string: string;
   boolean: boolean;
   number: number;
+  list: string;
 };
 
 export type TemplateUsageDeclaration = {

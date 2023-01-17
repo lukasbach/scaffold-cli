@@ -1,9 +1,12 @@
+import { DistinctChoice } from "inquirer";
 import { ParamType, ParamTypeMap } from "../types";
 import type { ScaffoldSdk } from "./scaffold-sdk";
 import { paramEvaluator } from "../core/param-evaluator";
 import { runner } from "../core/runner";
 
-export class OptionInitializer<T extends ParamType> implements Promise<ParamTypeMap[T]> {
+let evaluatedArgumentsCount = 0;
+
+export class ParameterInitializer<T extends ParamType> implements Promise<ParamTypeMap[T]> {
   private shortKey?: string;
 
   private description?: string;
@@ -16,7 +19,19 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
 
   private prom?: Promise<ParamTypeMap[T]>;
 
+  private argumentIndex?: number;
+
+  private isArgument?: boolean;
+
+  private possibleChoices?: DistinctChoice[];
+
   constructor(private key: string, private type: T, private sdk: ScaffoldSdk<any>) {}
+
+  asArgument(argumentIndex?: number) {
+    this.isArgument = true;
+    this.argumentIndex = argumentIndex;
+    return this;
+  }
 
   short(shortKey: string) {
     this.shortKey = shortKey;
@@ -35,7 +50,12 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
 
   default(defaultValue: ParamTypeMap[T]) {
     this.defaultValue = defaultValue;
-    return this.optional();
+    return this;
+  }
+
+  choices(choices: DistinctChoice[]) {
+    this.possibleChoices = choices;
+    return this;
   }
 
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
@@ -47,11 +67,21 @@ export class OptionInitializer<T extends ParamType> implements Promise<ParamType
         optional: !this.isRequired,
         default: this.defaultValue,
         hint: `Append --${this.key}=value to auto-fill this`,
+        choices: this.possibleChoices,
       },
-      runner.getOption(this.key, this.shortKey)
+      this.getProvidedValue()
     );
     this.sdk.setDataProperty(this.key, value);
     return value;
+  }
+
+  private getProvidedValue() {
+    if (this.isArgument) {
+      const value = runner.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
+      evaluatedArgumentsCount++;
+      return value;
+    }
+    return runner.getOption(this.key, this.shortKey);
   }
 
   then<TResult1 = ParamTypeMap[T], TResult2 = never>(
