@@ -18,7 +18,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     data: {},
     partials: {},
     helpers: {},
-    parameterSets: {},
+    parameterList: {},
   };
 
   private tsProject?: TsProject;
@@ -81,9 +81,9 @@ export class ScaffoldSdk<T extends RuntimeData> {
       get:
         (_, parameterSetKey: string) =>
         async (...params) =>
-          this.runtimeData.parameterSets[parameterSetKey](...params),
+          this.runtimeData.parameterList[parameterSetKey](...params),
     }
-  ) as { [key in keyof T["parameterSets"]]: (...args: Parameters<T["parameterSets"][key]>) => Promise<boolean> };
+  ) as { [key in keyof T["parameterList"]]: (...args: Parameters<T["parameterList"][key]>) => Promise<boolean> };
 
   readonly param = paramEvaluator.paramTypes.reduce<{
     [key in ParamType]: (name: string) => ParameterInitializer<key>;
@@ -120,11 +120,11 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
-  withParameterSet<K extends string, S extends RuntimeData["parameterSets"][string]>(
+  withParameterList<K extends string, S extends RuntimeData["parameterList"][string]>(
     name: K,
     parameterSet: S
-  ): ScaffoldSdk<T & { parameterSets: T["parameterSets"] & { [k in K]: S } }> {
-    this.runtimeData.parameterSets[name] = parameterSet;
+  ): ScaffoldSdk<T & { parameterSets: T["parameterList"] & { [k in K]: S } }> {
+    this.runtimeData.parameterList[name] = parameterSet;
     return this as any;
   }
 
@@ -137,6 +137,33 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
+  withActionSet<S extends RuntimeData["actions"]>(set: S): ScaffoldSdk<T & { actions: T["actions"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withAction(key, value));
+    return this as any;
+  }
+
+  withConditionSet<S extends RuntimeData["conditions"]>(set: S): ScaffoldSdk<T & { conditions: T["conditions"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withCondition(key, value));
+    return this as any;
+  }
+
+  withHelperSet<S extends RuntimeData["helpers"]>(set: S): ScaffoldSdk<T & { helpers: T["helpers"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withHelper(key, value));
+    return this as any;
+  }
+
+  withPartialSet<S extends RuntimeData["partials"]>(set: S): ScaffoldSdk<T & { partials: T["partials"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withPartial(key, value));
+    return this as any;
+  }
+
+  withParameterListSet<S extends RuntimeData["parameterList"]>(
+    set: S
+  ): ScaffoldSdk<T & { conditions: T["parameterList"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withParameterList(key, value));
+    return this as any;
+  }
+
   mergeWith<O extends RuntimeData>(
     otherSdk: ScaffoldSdk<O>
   ): ScaffoldSdk<{
@@ -145,7 +172,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     helpers: T["helpers"] & O["helpers"];
     partials: T["partials"] & O["partials"];
     data: T["data"] & O["data"];
-    parameterSets: T["parameterSets"] & O["parameterSets"];
+    parameterList: T["parameterList"] & O["parameterList"];
   }> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
