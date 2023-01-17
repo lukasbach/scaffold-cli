@@ -6,11 +6,11 @@ import * as path from "path";
 import { listCommand } from "./commands/list";
 import { newCommand } from "./commands/new";
 import { logger } from "./core/logger";
-import { createSdk } from "./sdk/create-sdk";
+import * as sdks from "./sdks";
 import { fileNames } from "./util";
 
 (async () => {
-  global.createSdk = createSdk;
+  global.sdks = sdks;
   global.execa = await import("execa");
   global.git = await import("simple-git");
   global.fs = await import("fs-extra");

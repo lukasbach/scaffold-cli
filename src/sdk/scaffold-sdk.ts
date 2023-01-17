@@ -13,7 +13,14 @@ import { getAllParentPaths } from "../util";
 import { logger } from "../core/logger";
 
 export class ScaffoldSdk<T extends RuntimeData> {
-  private runtimeData: RuntimeData = { actions: {}, conditions: {}, data: {}, partials: {}, helpers: {} };
+  private runtimeData: RuntimeData = {
+    actions: {},
+    conditions: {},
+    data: {},
+    partials: {},
+    helpers: {},
+    parameterSets: {},
+  };
 
   private tsProject?: TsProject;
 
@@ -69,6 +76,16 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
+  readonly parameterSets = new Proxy(
+    {},
+    {
+      get:
+        (_, parameterSetKey: string) =>
+        async (...params) =>
+          this.runtimeData.parameterSets[parameterSetKey](...params),
+    }
+  ) as { [key in keyof T["parameterSets"]]: (...args: Parameters<T["parameterSets"][key]>) => Promise<boolean> };
+
   readonly argument = paramEvaluator.paramTypes.reduce<{
     [key in ParamType]: (name: string, config?: ArgumentConfig<key>) => Promise<ParamTypeMap[key]>;
   }>(
@@ -114,6 +131,14 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
+  withParameterSet<K extends string, S extends RuntimeData["parameterSets"][string]>(
+    name: K,
+    parameterSet: S
+  ): ScaffoldSdk<T & { parameterSet: T["parameterSets"] & { [k in K]: S } }> {
+    this.runtimeData.parameterSets[name] = parameterSet;
+    return this as any;
+  }
+
   withPartial<K extends string, P extends Template>(
     name: K,
     partial: P
@@ -131,6 +156,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     helpers: T["helpers"] & O["helpers"];
     partials: T["partials"] & O["partials"];
     data: T["data"] & O["data"];
+    parameterSets: T["parameterSets"] & O["parameterSets"];
   }> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));

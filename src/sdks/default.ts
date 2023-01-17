@@ -1,9 +1,9 @@
-import * as changeCase from "change-case";
 import { ImportDeclarationStructure, OptionalKind } from "ts-morph";
-import { ScaffoldSdk } from "./scaffold-sdk";
+import * as changeCase from "change-case";
+import { createEmptySdk } from "./empty";
 
-export const createSdk = () => {
-  const sdk = new ScaffoldSdk<{ actions: {}; conditions: {}; data: {}; helpers: {}; partials: {} }>();
+export const createDefaultSdk = () => {
+  const sdk = createEmptySdk();
   return sdk
     .withAction("addFile", async (templateFile: string, target: string) => {
       const templateContents = await sdk.getTemplateFileContents(templateFile);

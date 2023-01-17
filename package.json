@@ -59,6 +59,7 @@
     "handlebars": "^4.7.7",
     "inquirer": "^8.2.5",
     "node-fetch": "^3.3.0",
+    "noindent": "^1.0.0",
     "simple-git": "^3.16.0",
     "ts-deepmerge": "^5.0.0",
     "ts-morph": "^17.0.1",

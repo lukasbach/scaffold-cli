@@ -5,11 +5,11 @@ import type * as fsLib from "fs-extra";
 import type * as osLib from "os";
 import type * as yamlLib from "yaml";
 import type * as changeCaseLib from "change-case";
-import type { createSdk as createSdkFunc } from "./sdk/create-sdk";
+import type * as sdkList from "./sdks";
 
 declare global {
   var properties: Record<string, any>;
-  var createSdk: typeof createSdkFunc;
+  var sdks: typeof sdkList;
   var $: typeof execaLib.execaCommand;
   var execa: typeof execaLib;
   var git: typeof gitLib;
