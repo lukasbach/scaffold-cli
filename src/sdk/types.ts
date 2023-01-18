@@ -6,6 +6,4 @@ export type RuntimeData = {
   helpers: Record<string, HelperDelegate>;
   partials: Record<string, Template>;
   parameterList: Record<string, (...args: any[]) => Promise<any>>;
-
-  data: Record<string, any>;
 };

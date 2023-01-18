@@ -1,7 +1,6 @@
 import * as fs from "fs-extra";
 import path from "path";
 import { HelperDelegate, Template } from "handlebars";
-import merge from "ts-deepmerge";
 import { Project as TsProject } from "ts-morph";
 import { RuntimeData } from "./types";
 import { ParameterInitializer } from "./parameter-initializer";
@@ -15,7 +14,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = {
     actions: {},
     conditions: {},
-    data: {},
     partials: {},
     helpers: {},
     parameterList: {},
@@ -175,7 +173,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     conditions: T["conditions"] & O["conditions"];
     helpers: T["helpers"] & O["helpers"];
     partials: T["partials"] & O["partials"];
-    data: T["data"] & O["data"];
     parameterList: T["parameterList"] & O["parameterList"];
   }> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
@@ -185,7 +182,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     Object.entries(otherSdk.internalRuntimeData.parameterList).forEach(([key, value]) =>
       this.withParameterList(key, value)
     );
-    this.runtimeData.data = merge(this.getData, otherSdk.getData());
     return this as any;
   }
 
@@ -197,12 +193,12 @@ export class ScaffoldSdk<T extends RuntimeData> {
         data[key] = {};
       }
       return data[key];
-    }, this.runtimeData.data);
+    }, runner.data);
     parent[pieces[pieces.length - 1]] = value;
   }
 
   getData() {
-    return this.runtimeData.data;
+    return runner.data;
   }
 
   async getTemplateFileContents(relativePath: string) {
@@ -210,7 +206,8 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   fillTemplate(template: string) {
-    console.log("FIlling", template, "with", this.getData());
+    console.log("Filling", template, "with", this.getData());
+    console.log(this.handlebars.partials);
     return this.handlebars.compile(template)(this.getData());
   }
 

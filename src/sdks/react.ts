@@ -9,18 +9,19 @@ export const createReactSdk = () => {
       propsType: await sdk.param.list("propsType").optional().choices(["interface", "type", "inline"]).default("type"),
       exportPropsType: await sdk.param.boolean("exportPropsType").optional().default(true),
     }))
-    .withPartial("propsType", () =>
+    .withPartial(
+      "propsType",
       noindent(`
         {{#ifEquals propsType "interface"}}
         {{#if exportPropsType}}export {{/if}}interface {{ pascalCase componentName }}Props {
           {{#if dummyProp}}dummy: string;{{/if}}
         }
-        {{/if}}
-        {{#if propsType "type"}}
+        {{/ifEquals}}
+        {{#ifEquals propsType "type"}}
         {{#if exportPropsType}}export {{/if}}type {{ pascalCase componentName }}Props = {
           {{#if dummyProp}}dummy: string;{{/if}}
         }
-        {{/if}}
+        {{/ifEquals}}
     `)
     );
 };

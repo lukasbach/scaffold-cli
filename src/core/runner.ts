@@ -19,6 +19,8 @@ export class Runner {
 
   public readonly handlebars = handlebars.create();
 
+  public data: any = {};
+
   async runTemplate(template: TemplateUsageDeclaration, cliArgs: string[], targetPath: string) {
     this.initParameters(cliArgs);
     this.template = template;

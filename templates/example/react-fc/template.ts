@@ -2,9 +2,9 @@ import "../../../src/globals";
 import noindent from "noindent";
 
 const componentTemplate = noindent(`
-  {{> propsType}}
+  {{> propsType }}
   
-  export const {{ componentName }}: React.FC<{  }> = props => {
+  export const {{ camelCase componentName }}: React.FC<{  }> = props => {
     return (
       <>
         hello
