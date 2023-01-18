@@ -24,6 +24,9 @@ const markdownTemplate = noindent(`
   
   ### Outputs
   
+  Outputs shown below are generated based on default inputs.
+  Change the values listed above to customize the results.
+  
   {{#each output}}
   <details>
     <summary>{{filename}}</summary>
@@ -38,7 +41,9 @@ const markdownTemplate = noindent(`
   
   When run in default settings, the following actions are used:
   
+  \`\`\`
   {{#each actions}}{{#if @index}}, {{/if}}{{this}}{{/each}}
+  \`\`\`
   `);
 
 export class Introspection {

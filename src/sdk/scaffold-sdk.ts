@@ -222,14 +222,18 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   fillTemplate(template: string) {
-    if (scaffold.introspection.isIntrospectionRun) {
-      return template;
+    if (this.isIntrospectionRun) {
+      try {
+        this.handlebars.compile(template)(this.getData());
+      } catch (_) {
+        return template;
+      }
     }
     return this.handlebars.compile(template)(this.getData());
   }
 
   async writeToTarget(relativePath: string, contents: string) {
-    if (scaffold.introspection.isIntrospectionRun) {
+    if (this.isIntrospectionRun) {
       scaffold.introspection.registerOutput(relativePath, contents);
       return null;
     }
@@ -239,7 +243,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   async getTsProject() {
-    if (scaffold.introspection.isIntrospectionRun) {
+    if (this.isIntrospectionRun) {
       throw new Error("Cannot get TS project in introspection mode");
     }
 
