@@ -17,7 +17,7 @@
     "!lib/**/*.spec.js"
   ],
   "scripts": {
-    "start": "esr ./src/index.ts",
+    "start": "esr src/cli.ts",
     "debug": "yarn start new react-fc \"My Component\"",
     "build": "run-s \"build:*\"",
     "build:esm": "tsc -m es2020 --outDir lib/esm",
@@ -26,7 +26,8 @@
     "lint": "eslint . --fix",
     "lint:test": "eslint .",
     "prepublishOnly": "yarn build",
-    "clean": "rimraf ./lib/ ./exec/"
+    "clean": "rimraf ./lib/ ./exec/",
+    "docs": "typedoc --out docs src/index.ts --excludeInternal"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",
@@ -49,6 +50,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "rimraf": "^3.0.2",
+    "typedoc": "^0.23.24",
     "typescript": "^4.8.4"
   },
   "dependencies": {
