@@ -27,6 +27,11 @@ export type ParamTypeMap = {
   boolean: boolean;
   number: number;
   list: string;
+  checkbox: string[];
+  password: string;
+  editor: string;
+  confirm: boolean;
+  // expand: string;
 };
 
 export type TemplateUsageDeclaration = {
