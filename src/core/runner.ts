@@ -5,12 +5,6 @@ import { fileNames, hash } from "../util";
 import { TemplateUsageDeclaration } from "../types";
 
 export class Runner {
-  private arguments: string[] = [];
-
-  private options: Record<string, string | true> = {};
-
-  private shortOptions: Record<string, string | true> = {};
-
   private template: TemplateUsageDeclaration;
 
   private targetPath: string;
@@ -21,8 +15,7 @@ export class Runner {
 
   public data: any = {};
 
-  async runTemplate(template: TemplateUsageDeclaration, cliArgs: string[], targetPath: string) {
-    this.initParameters(cliArgs);
+  async runTemplate(template: TemplateUsageDeclaration, targetPath: string) {
     this.template = template;
     this.targetPath = targetPath;
 
@@ -44,18 +37,11 @@ export class Runner {
     return outfile;
   }
 
-  async introspectTemplate(outfile: string) {
+  async introspectTemplate(template: TemplateUsageDeclaration) {
+    const outfile = await this.buildTemplate(template);
     scaffold.introspection.startIntrospection();
     await (await import(`file://${outfile}`)).default.default();
     scaffold.introspection.endIntrospection();
-  }
-
-  getArguments() {
-    return this.arguments;
-  }
-
-  getOption(key: string, shortKey?: string) {
-    return this.options[key] ?? (shortKey ? this.shortOptions[shortKey] : undefined);
   }
 
   getTemplate() {
@@ -74,17 +60,5 @@ export class Runner {
     for (const file of files) {
       this.changedFiles.add(file);
     }
-  }
-
-  private initParameters(cliArgs: string[]) {
-    this.arguments = cliArgs.filter(a => !a.startsWith("-"));
-    this.options = cliArgs
-      .filter(a => a.startsWith("--"))
-      .map(a => a.slice(2).split("="))
-      .reduce((opts, [option, value]) => ({ ...opts, [option]: value ?? true }), {});
-    this.shortOptions = cliArgs
-      .filter(a => a.startsWith("-") && !a.startsWith("--"))
-      .map(a => a.slice(1).split("="))
-      .reduce((opts, [option, value]) => ({ ...opts, [option]: value ?? true }), {});
   }
 }

@@ -3,8 +3,6 @@ import { Command } from "commander";
 import * as fs from "fs-extra";
 import * as path from "path";
 
-import { listCommand } from "./commands/list";
-import { newCommand } from "./commands/new";
 import { fileNames } from "./util";
 import { scaffold } from "./scaffold";
 
@@ -22,13 +20,27 @@ import { scaffold } from "./scaffold";
     return global.execa.execaCommand(cmd, opts);
   }) as any;
 
-  const program = new Command();
-
   await fs.ensureDir(fileNames.tempDir);
 
-  program.version(JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), { encoding: "utf-8" })).version);
-  program.addCommand(listCommand);
-  program.addCommand(newCommand);
+  if (scaffold.args.getOption("version", "v")) {
+    const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), { encoding: "utf-8" }));
+    console.log(`scaffold-cli ${version}`);
+    process.exit(0);
+  }
 
-  program.parse(process.argv);
+  await scaffold.templateScope.initialize();
+
+  const template = scaffold.templateScope.getTemplates()[scaffold.args.getTemplateName()];
+  if (!template) {
+    throw new Error(`No template registered with the name ${template}`);
+  }
+
+  const documentTemplate = scaffold.args.getOption("document-template");
+  if (documentTemplate) {
+    await scaffold.runner.introspectTemplate(template);
+    await scaffold.introspection.documentTemplate(documentTemplate);
+    process.exit(0);
+  }
+
+  await scaffold.runner.runTemplate(template, process.cwd());
 })();

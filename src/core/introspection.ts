@@ -15,7 +15,11 @@ export class Introspection {
     this.isActive = false;
   }
 
-  registerOutput(path: string, content: string) {}
+  registerOutput(path: string, content: string) {
+    console.log(path, content);
+  }
 
   registerParameter(parameter: ParameterInitializer<any>) {}
+
+  async documentTemplate(output: string) {}
 }
