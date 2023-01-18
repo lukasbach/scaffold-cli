@@ -49,8 +49,10 @@ export class ScaffoldSdk<T extends RuntimeData> {
     {
       get:
         (_, actionKey: string) =>
-        async (...params) =>
-          this.runtimeData.actions[actionKey](...params),
+        async (...params) => {
+          scaffold.introspection.registerActionCall(actionKey);
+          return this.runtimeData.actions[actionKey](...params);
+        },
     }
   ) as {
     [key in keyof T["actions"]]: (...args: Parameters<T["actions"][key]>) => Promise<ReturnType<T["actions"][key]>>;
@@ -94,10 +96,22 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }>(
     (map, type) => ({
       ...map,
-      [type]: (key: string) => new ParameterInitializer(key, type, this),
+      [type]: (key: string) => {
+        const param = new ParameterInitializer(key, type, this);
+        scaffold.introspection.registerParameter(param);
+        return param;
+      },
     }),
     {} as any
   );
+
+  setTemplateName(name: string) {
+    scaffold.introspection.setTemplateName(name);
+  }
+
+  setTemplateDescription(descr: string) {
+    scaffold.introspection.setTemplateDescription(descr);
+  }
 
   withAction<K extends string, A extends (...args: any[]) => any>(
     actionKey: K,
@@ -245,6 +259,13 @@ export class ScaffoldSdk<T extends RuntimeData> {
       });
     }
     return this.tsProject;
+  }
+
+  async do(callback: () => Promise<void>) {
+    if (this.isIntrospectionRun) {
+      return;
+    }
+    await callback();
   }
 
   async getTsSourceFile(filePath: string) {

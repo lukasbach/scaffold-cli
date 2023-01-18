@@ -2,6 +2,7 @@ import { DistinctChoice } from "inquirer";
 import { ParamType, ParamTypeMap } from "../types";
 import type { ScaffoldSdk } from "./scaffold-sdk";
 import { scaffold } from "../scaffold";
+import { isNotNullish } from "../util";
 
 let evaluatedArgumentsCount = 0;
 
@@ -29,11 +30,16 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   getConfig() {
     return {
       type: this.type,
+      isArgument: this.isArgument,
+      shortKey: this.shortKey,
       key: this.key,
       description: this.description,
       optional: !this.isRequired,
       default: this.defaultValue,
       choices: this.possibleChoices,
+      choicesText: this.possibleChoices
+        ?.map(choice => (typeof choice === "string" ? choice : (choice as any).value))
+        .filter(isNotNullish),
     };
   }
 
@@ -70,7 +76,6 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
 
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
     if (scaffold.introspection.isIntrospectionRun) {
-      scaffold.introspection.registerParameter(this);
       return this.defaultValue;
     }
 
@@ -92,11 +97,11 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
 
   private getProvidedValue() {
     if (this.isArgument) {
-      const value = scaffold.runner.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
+      const value = scaffold.args.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
       evaluatedArgumentsCount++;
       return value;
     }
-    return scaffold.runner.getOption(this.key, this.shortKey);
+    return scaffold.args.getOption(this.key, this.shortKey);
   }
 
   then<TResult1 = ParamTypeMap[T], TResult2 = never>(

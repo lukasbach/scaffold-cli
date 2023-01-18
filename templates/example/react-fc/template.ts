@@ -19,6 +19,8 @@ export default async () => {
     .createDefaultSdk()
     .mergeWith(scaffold.sdks.createReactSdk())
     .mergeWith(scaffold.sdks.createJavascriptSdk());
+  sdk.setTemplateName("React FC");
+  sdk.setTemplateDescription("Description Text");
   sdk.setDataProperty("reactImports", ["FC"]);
   const { componentName } = await sdk.parameterLists.reactComponent();
   const filenameCase = await sdk.param
