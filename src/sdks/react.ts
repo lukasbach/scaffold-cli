@@ -8,11 +8,11 @@ export const createReactSdk = () => {
       componentName: await sdk.param
         .string("componentName")
         .asArgument()
+        .required()
         .default("My Component")
         .descr("The name of the React component"),
       propsType: await sdk.param
         .list("propsType")
-        .optional()
         .choices(["interface", "type", "inline"])
         .default("type")
         .descr(
@@ -21,12 +21,10 @@ export const createReactSdk = () => {
         ),
       exportPropsType: await sdk.param
         .boolean("exportPropsType")
-        .optional()
         .default(true)
         .descr("Determines if the props type will be exported."),
       dummyProp: await sdk.param
         .boolean("dummyProp")
-        .optional()
         .default(false)
         .descr(
           "If enabled, a sample property will be included in the prop type. This can help a subsequent " +
@@ -34,7 +32,6 @@ export const createReactSdk = () => {
         ),
       importReactSymbols: await sdk.param
         .boolean("importReactSymbols")
-        .optional()
         .default(false)
         .descr(
           "If disabled, react symbols will be used like `React.FC`. If enabled, all react types and " +

@@ -11,7 +11,7 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
 
   private description?: string;
 
-  private isRequired = true;
+  private isRequired = false;
 
   private defaultValue?: ParamTypeMap[T];
 
@@ -59,8 +59,8 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
     return this;
   }
 
-  optional() {
-    this.isRequired = false;
+  required() {
+    this.isRequired = true;
     return this;
   }
 
