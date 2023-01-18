@@ -242,6 +242,17 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return fs.writeFile(fullPath, contents);
   }
 
+  async appendWriteToTarget(relativePath: string, contents: string) {
+    if (this.isIntrospectionRun) {
+      scaffold.introspection.registerOutput(relativePath, contents);
+      return null;
+    }
+    const fullPath = path.join(this.targetPath, relativePath);
+    scaffold.runner.addChangedFiles(fullPath);
+    const existingContent = fs.existsSync(fullPath) ? await fs.readFile(fullPath, { encoding: "utf-8" }) : "";
+    return fs.writeFile(fullPath, existingContent + contents);
+  }
+
   async getTsProject() {
     if (this.isIntrospectionRun) {
       throw new Error("Cannot get TS project in introspection mode");

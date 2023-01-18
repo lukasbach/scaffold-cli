@@ -56,9 +56,9 @@ export class ParamEvaluator {
         return (await this.evaluateString(param, cliValue, "editor")) as any;
       }
 
-      if (isParamType("expand", param)) {
-        return (await this.evaluateList(param, cliValue, "expand")) as any;
-      }
+      // if (isParamType("expand", param)) {
+      //   return (await this.evaluateList(param, cliValue, "expand")) as any;
+      // }
 
       throw new Error(`Unknown parameter type ${param.type}`);
     })();
@@ -140,7 +140,7 @@ export class ParamEvaluator {
               { key: "false", value: "No" },
             ],
           })
-        )[param.key] === "true"
+        )[param.key] === "Yes"
       );
     }
 
