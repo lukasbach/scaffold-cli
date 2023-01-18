@@ -11,3 +11,5 @@ lib
 exec
 .idea
 yarn-error.log
+
+./my-component.tsx

@@ -4,7 +4,7 @@ import noindent from "noindent";
 const componentTemplate = noindent(`
   {{> propsType }}
   
-  export const {{ camelCase componentName }}: React.FC<{  }> = props => {
+  export const {{ pascalCase componentName }}: React.FC<{  }> = props => {
     return (
       <>
         hello

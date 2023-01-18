@@ -5,7 +5,12 @@ import { createEmptySdk } from "./empty";
 export const createDefaultSdk = () => {
   const sdk = createEmptySdk();
   return sdk
-    .withHelper("ifEquals", (arg1, arg2, options) => (arg1 === arg2 ? options.fn(this) : options.inverse(this)))
+    .withHelper("ifEquals", function ifEquals(arg1, arg2, options) {
+      if (arguments.length !== 3) {
+        throw new Error("#if requires exactly one argument");
+      }
+      return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+    })
     .withActionSet({
       addFile: async (templateFile: string, target: string) => {
         const templateContents = await sdk.getTemplateFileContents(templateFile);

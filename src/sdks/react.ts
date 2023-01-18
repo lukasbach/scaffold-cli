@@ -8,6 +8,7 @@ export const createReactSdk = () => {
       componentName: await sdk.param.string("componentName").asArgument().default("My Component"),
       propsType: await sdk.param.list("propsType").optional().choices(["interface", "type", "inline"]).default("type"),
       exportPropsType: await sdk.param.boolean("exportPropsType").optional().default(true),
+      dummyProp: await sdk.param.boolean("dummyProp").optional().default(false),
     }))
     .withPartial(
       "propsType",
