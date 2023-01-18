@@ -12,4 +12,3 @@ export class Logger {
     console.log(...values);
   }
 }
-export const logger = new Logger();

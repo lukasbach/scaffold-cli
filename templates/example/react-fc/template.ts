@@ -1,5 +1,6 @@
 import "../../../src/globals";
 import noindent from "noindent";
+import { scaffold } from "../../../src/scaffold";
 
 const componentTemplate = noindent(`
   {{{ reactImportStatement }}}
@@ -16,7 +17,10 @@ const componentTemplate = noindent(`
   `);
 
 (async () => {
-  const sdk = sdks.createDefaultSdk().mergeWith(sdks.createReactSdk()).mergeWith(sdks.createJavascriptSdk());
+  const sdk = scaffold.sdks
+    .createDefaultSdk()
+    .mergeWith(scaffold.sdks.createReactSdk())
+    .mergeWith(scaffold.sdks.createJavascriptSdk());
   sdk.setDataProperty("reactImports", ["FC"]);
   const { componentName } = await sdk.parameterLists.reactComponent();
   const filenameCase = await sdk.param

@@ -1,8 +1,7 @@
 import { DistinctChoice } from "inquirer";
 import { ParamType, ParamTypeMap } from "../types";
 import type { ScaffoldSdk } from "./scaffold-sdk";
-import { paramEvaluator } from "../core/param-evaluator";
-import { runner } from "../core/runner";
+import { scaffold } from "../scaffold";
 
 let evaluatedArgumentsCount = 0;
 
@@ -59,7 +58,7 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   }
 
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
-    const value = await paramEvaluator.evaluate(
+    const value = await scaffold.paramEvaluator.evaluate(
       {
         type: this.type,
         key: this.key,
@@ -77,11 +76,11 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
 
   private getProvidedValue() {
     if (this.isArgument) {
-      const value = runner.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
+      const value = scaffold.runner.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
       evaluatedArgumentsCount++;
       return value;
     }
-    return runner.getOption(this.key, this.shortKey);
+    return scaffold.runner.getOption(this.key, this.shortKey);
   }
 
   then<TResult1 = ParamTypeMap[T], TResult2 = never>(

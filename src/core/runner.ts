@@ -76,5 +76,3 @@ export class Runner {
       .reduce((opts, [option, value]) => ({ ...opts, [option]: value ?? true }), {});
   }
 }
-
-export const runner = new Runner();

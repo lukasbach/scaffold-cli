@@ -5,11 +5,10 @@ import type * as fsLib from "fs-extra";
 import type * as osLib from "os";
 import type * as yamlLib from "yaml";
 import type * as changeCaseLib from "change-case";
-import type * as sdkList from "./sdks";
+import type { scaffold as scaffoldLib } from "./scaffold";
 
 declare global {
-  var properties: Record<string, any>;
-  var sdks: typeof sdkList;
+  var scaffold: typeof scaffoldLib;
   var $: typeof execaLib.execaCommand;
   var execa: typeof execaLib;
   var git: typeof gitLib;

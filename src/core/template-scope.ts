@@ -60,5 +60,3 @@ export class TemplateScope {
       });
   }
 }
-
-export const templateScope = new TemplateScope(process.cwd());

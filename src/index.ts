@@ -5,12 +5,11 @@ import * as path from "path";
 
 import { listCommand } from "./commands/list";
 import { newCommand } from "./commands/new";
-import { logger } from "./core/logger";
-import * as sdks from "./sdks";
 import { fileNames } from "./util";
+import { scaffold } from "./scaffold";
 
 (async () => {
-  global.sdks = sdks;
+  global.scaffold = scaffold;
   global.execa = await import("execa");
   global.git = await import("simple-git");
   global.fs = await import("fs-extra");
@@ -19,7 +18,7 @@ import { fileNames } from "./util";
   global.changeCase = await import("change-case");
   global.fetch = (await import("node-fetch")).default as any;
   global.$ = ((cmd, opts) => {
-    logger.log(`Running ${cmd}`);
+    scaffold.logger.log(`Running ${cmd}`);
     return global.execa.execaCommand(cmd, opts);
   }) as any;
 

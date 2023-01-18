@@ -4,11 +4,9 @@ import { HelperDelegate, Template } from "handlebars";
 import { Project as TsProject } from "ts-morph";
 import { RuntimeData } from "./types";
 import { ParameterInitializer } from "./parameter-initializer";
-import { paramEvaluator } from "../core/param-evaluator";
 import { ParamType } from "../types";
-import { runner } from "../core/runner";
 import { getAllParentPaths } from "../util";
-import { logger } from "../core/logger";
+import { scaffold } from "../scaffold";
 
 export class ScaffoldSdk<T extends RuntimeData> {
   private runtimeData: RuntimeData = {
@@ -27,15 +25,15 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   public get template() {
-    return runner.getTemplate();
+    return scaffold.runner.getTemplate();
   }
 
   public get targetPath() {
-    return runner.getTargetPath();
+    return scaffold.runner.getTargetPath();
   }
 
   public get handlebars() {
-    return runner.handlebars;
+    return scaffold.runner.handlebars;
   }
 
   public get hb() {
@@ -87,7 +85,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     ) => ReturnType<T["parameterList"][key]>;
   };
 
-  readonly param = paramEvaluator.paramTypes.reduce<{
+  readonly param = scaffold.paramEvaluator.paramTypes.reduce<{
     [key in ParamType]: (name: string) => ParameterInitializer<key>;
   }>(
     (map, type) => ({
@@ -193,12 +191,12 @@ export class ScaffoldSdk<T extends RuntimeData> {
         data[key] = {};
       }
       return data[key];
-    }, runner.data);
+    }, scaffold.runner.data);
     parent[pieces[pieces.length - 1]] = value;
   }
 
   getData() {
-    return runner.data;
+    return scaffold.runner.data;
   }
 
   async getTemplateFileContents(relativePath: string) {
@@ -211,7 +209,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
 
   async writeToTarget(relativePath: string, contents: string) {
     const fullPath = path.join(this.targetPath, relativePath);
-    runner.addChangedFiles(fullPath);
+    scaffold.runner.addChangedFiles(fullPath);
     return fs.writeFile(fullPath, contents);
   }
 
@@ -225,7 +223,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
       if (!projectRoot) {
         throw new Error("Could not find a tsconfig.json in any parent folder");
       }
-      logger.debug(`Found TypeScript Project root at ${projectRoot}`);
+      scaffold.logger.debug(`Found TypeScript Project root at ${projectRoot}`);
       this.tsProject = new TsProject({
         tsConfigFilePath: path.join(projectRoot, "tsconfig.json"),
         skipAddingFilesFromTsConfig: true,
@@ -241,10 +239,10 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   getChangedFiles() {
-    return [...runner.getChangedFiles().values()];
+    return [...scaffold.runner.getChangedFiles().values()];
   }
 
   registerChangedFiles(...targets: string[]) {
-    runner.addChangedFiles(...targets.map(target => path.join(this.targetPath, target)));
+    scaffold.runner.addChangedFiles(...targets.map(target => path.join(this.targetPath, target)));
   }
 }

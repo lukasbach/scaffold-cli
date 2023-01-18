@@ -1,7 +1,8 @@
 import "../../../src/globals";
+import { scaffold } from "../../../src/scaffold";
 
 (async () => {
-  const sdk = sdks.createDefaultSdk();
+  const sdk = scaffold.sdks.createDefaultSdk();
 
   // console.log(
   //   "arguments:",

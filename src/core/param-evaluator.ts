@@ -108,5 +108,3 @@ export class ParamEvaluator {
     return undefined;
   }
 }
-
-export const paramEvaluator = new ParamEvaluator();
