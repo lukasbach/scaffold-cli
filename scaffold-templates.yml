@@ -1,10 +1,12 @@
 repositories:
-  - ./templates/example
+  - ./templates/react
 templates:
-  example: ./templates/example/example-template
-  withDefaults:
-    source: ./templates/example/example-template
+  example: ./templates/react/example-template
+  customFc:
+    source: ./templates/react/react-fc
     defaults:
-      optionalStringParam: "Default value"
-      booleanParam: true
-      numberParam: 42
+      propsType: interface
+      exportPropsType: false
+      dummyProp: true
+      filenameCase: snakeCase
+      fileExtension: ts

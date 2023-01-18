@@ -19,6 +19,7 @@ export class Runner {
   async runTemplate(template: TemplateUsageDeclaration, targetPath: string) {
     this.template = template;
     this.targetPath = targetPath;
+    console.log(template);
 
     const outfile = await this.buildTemplate(template);
     await (await import(`file://${outfile}`)).default.default();
@@ -27,12 +28,8 @@ export class Runner {
   async buildTemplate(template: TemplateUsageDeclaration) {
     const outfile = path.join(fileNames.tempDir, `${hash(template.source)}.js`);
 
-    const entryPoint = fs.statSync(template.source).isDirectory()
-      ? path.join(template.source, "template.ts")
-      : template.source;
-
     await esbuild.build({
-      entryPoints: [entryPoint],
+      entryPoints: [template.source],
       bundle: true,
       allowOverwrite: true,
       outfile,

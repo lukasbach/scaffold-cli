@@ -97,6 +97,10 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   }
 
   private getProvidedValue() {
+    const templateDefault = scaffold.runner.getTemplate().defaults?.[this.key];
+    if (templateDefault) {
+      return templateDefault;
+    }
     if (this.isArgument) {
       const value = scaffold.args.getArguments()[this.argumentIndex ?? evaluatedArgumentsCount];
       evaluatedArgumentsCount++;
