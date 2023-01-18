@@ -26,6 +26,11 @@ export class Runner {
     this.template = template;
     this.targetPath = targetPath;
 
+    const outfile = await this.buildTemplate(template);
+    await (await import(`file://${outfile}`)).default.default();
+  }
+
+  async buildTemplate(template: TemplateUsageDeclaration) {
     const outfile = path.join(fileNames.tempDir, `${hash(template.source)}.js`);
 
     await esbuild.build({
@@ -33,9 +38,16 @@ export class Runner {
       bundle: true,
       allowOverwrite: true,
       outfile,
+      platform: "node",
     });
 
-    await import(`file://${outfile}`);
+    return outfile;
+  }
+
+  async introspectTemplate(outfile: string) {
+    scaffold.introspection.startIntrospection();
+    await (await import(`file://${outfile}`)).default.default();
+    scaffold.introspection.endIntrospection();
   }
 
   getArguments() {

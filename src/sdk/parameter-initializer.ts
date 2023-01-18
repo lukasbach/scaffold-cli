@@ -26,6 +26,17 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
 
   constructor(private key: string, private type: T, private sdk: ScaffoldSdk<any>) {}
 
+  getConfig() {
+    return {
+      type: this.type,
+      key: this.key,
+      description: this.description,
+      optional: !this.isRequired,
+      default: this.defaultValue,
+      choices: this.possibleChoices,
+    };
+  }
+
   asArgument(argumentIndex?: number) {
     this.isArgument = true;
     this.argumentIndex = argumentIndex;
@@ -58,6 +69,11 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   }
 
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
+    if (scaffold.introspection.isIntrospectionRun) {
+      scaffold.introspection.registerParameter(this);
+      return this.defaultValue;
+    }
+
     const value = await scaffold.paramEvaluator.evaluate(
       {
         type: this.type,

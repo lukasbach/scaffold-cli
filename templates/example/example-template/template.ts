@@ -1,7 +1,7 @@
 import "../../../src/globals";
 import { scaffold } from "../../../src/scaffold";
 
-(async () => {
+export default async () => {
   const sdk = scaffold.sdks.createDefaultSdk();
 
   // console.log(
@@ -20,4 +20,4 @@ import { scaffold } from "../../../src/scaffold";
   // await sdk.actions.tsAddListItem("src/index.ts");
   // await sdk.actions.eslint();
   // await sdk.actions.addFile("template-file.md", "{{first-arg}}.md");
-})();
+};

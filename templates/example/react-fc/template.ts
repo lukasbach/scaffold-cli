@@ -1,6 +1,5 @@
 import "../../../src/globals";
 import noindent from "noindent";
-import { scaffold } from "../../../src/scaffold";
 
 const componentTemplate = noindent(`
   {{{ reactImportStatement }}}
@@ -15,8 +14,7 @@ const componentTemplate = noindent(`
     );
   };
   `);
-
-(async () => {
+export default async () => {
   const sdk = scaffold.sdks
     .createDefaultSdk()
     .mergeWith(scaffold.sdks.createReactSdk())
@@ -40,4 +38,4 @@ const componentTemplate = noindent(`
     .choices(["tsx", "ts", "jsx", "js"]);
   const fileName = `${sdk.helper[filenameCase](componentName)}.${fileExtension}`;
   await sdk.actions.addInlineTemplate(fileName, componentTemplate);
-})();
+};

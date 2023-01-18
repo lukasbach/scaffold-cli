@@ -40,6 +40,10 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this.handlebars;
   }
 
+  public get isIntrospectionRun() {
+    return scaffold.introspection.isIntrospectionRun;
+  }
+
   readonly actions = new Proxy(
     {},
     {
@@ -204,16 +208,27 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   fillTemplate(template: string) {
+    if (scaffold.introspection.isIntrospectionRun) {
+      return template;
+    }
     return this.handlebars.compile(template)(this.getData());
   }
 
   async writeToTarget(relativePath: string, contents: string) {
+    if (scaffold.introspection.isIntrospectionRun) {
+      scaffold.introspection.registerOutput(relativePath, contents);
+      return null;
+    }
     const fullPath = path.join(this.targetPath, relativePath);
     scaffold.runner.addChangedFiles(fullPath);
     return fs.writeFile(fullPath, contents);
   }
 
   async getTsProject() {
+    if (scaffold.introspection.isIntrospectionRun) {
+      throw new Error("Cannot get TS project in introspection mode");
+    }
+
     if (!this.tsProject) {
       const projectRoot = (
         await Promise.all(
