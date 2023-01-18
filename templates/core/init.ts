@@ -44,6 +44,7 @@ const readmeAddition = noindent(`
 
 export default async () => {
   const sdk = scaffold.sdks.createDefaultSdk();
+  sdk.setTemplateName("Initialize scaffold on a code repository");
   const addToReadme = await sdk.param
     .boolean("addToReadme")
     .descr("Add scaffold usage instructions to readme?")

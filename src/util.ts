@@ -19,9 +19,13 @@ export const promisePool = async (callback: (run: (...proms: Promise<any>[]) => 
 
 export const hash = (str: string) => crypto.createHash("sha1").update(str).digest("hex");
 
+const appData =
+  process.env.APPDATA ||
+  (process.platform === "darwin" ? `${process.env.HOME}/Library/Preferences` : `${process.env.HOME}/.local/share`);
 export const fileNames = {
   templateRoot: "scaffold-templates.yml",
   tempDir: path.join(os.tmpdir(), "scaffold-cli"),
+  localReposDir: path.join(appData, "scaffold-cli"),
 };
 
 export const getAllParentPaths = (folder: string) => {

@@ -1,6 +1,6 @@
 repositories:
-  - ./templates/react
-  - ./templates/core
+  - lukasbach/scaffold-cli/templates/react
+  - lukasbach/scaffold-cli/templates/core
 templates:
   example: ./templates/react/example-template
   customFc:
