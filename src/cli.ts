@@ -15,6 +15,9 @@ import { scaffold } from "./scaffold";
   global.changeCase = await import("change-case");
   global.fetch = (await import("node-fetch")).default as any;
   global.$ = ((cmd, opts) => {
+    if (scaffold.introspection.isIntrospectionRun) {
+      return null;
+    }
     scaffold.logger.log(`Running ${cmd}`);
     return global.execa.execaCommand(cmd, opts);
   }) as any;

@@ -19,7 +19,6 @@ export class Runner {
   async runTemplate(template: TemplateUsageDeclaration, targetPath: string) {
     this.template = template;
     this.targetPath = targetPath;
-    console.log(template);
 
     const outfile = await this.buildTemplate(template);
     await (await import(`file://${outfile}`)).default.default();

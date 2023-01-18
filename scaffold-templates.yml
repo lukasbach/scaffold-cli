@@ -1,5 +1,6 @@
 repositories:
   - ./templates/react
+  - ./templates/core
 templates:
   example: ./templates/react/example-template
   customFc:
