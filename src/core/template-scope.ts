@@ -53,10 +53,10 @@ export class TemplateScope {
 
   private async initRepository(repoPath: string) {
     (await fs.readdir(repoPath, { withFileTypes: true }))
-      .filter(file => file.isDirectory())
+      .filter(file => file.isDirectory() || path.extname(file.name) === ".ts")
       .map(file => [file.name, path.join(repoPath, file.name)])
       .forEach(([key, source]) => {
-        this.loadedTemplates[key] = { source };
+        this.loadedTemplates[path.basename(key, path.extname(key))] = { source };
       });
   }
 }

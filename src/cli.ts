@@ -29,9 +29,11 @@ import { scaffold } from "./scaffold";
 
   await scaffold.templateScope.initialize();
 
-  const template = scaffold.templateScope.getTemplates()[scaffold.args.getTemplateName()];
+  const templateName = scaffold.args.getTemplateName();
+  const template = scaffold.templateScope.getTemplates()[templateName];
   if (!template) {
-    throw new Error(`No template registered with the name ${template}`);
+    console.log(scaffold.templateScope.getTemplates());
+    throw new Error(`No template registered with the name ${templateName}`);
   }
 
   const documentTemplate = scaffold.args.getOption("document-template");

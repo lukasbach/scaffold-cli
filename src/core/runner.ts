@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import path from "path";
 import * as handlebars from "handlebars";
+import fs from "fs-extra";
 import { fileNames, hash } from "../util";
 import { TemplateUsageDeclaration } from "../types";
 
@@ -26,8 +27,12 @@ export class Runner {
   async buildTemplate(template: TemplateUsageDeclaration) {
     const outfile = path.join(fileNames.tempDir, `${hash(template.source)}.js`);
 
+    const entryPoint = fs.statSync(template.source).isDirectory()
+      ? path.join(template.source, "template.ts")
+      : template.source;
+
     await esbuild.build({
-      entryPoints: [path.join(template.source, "template.ts")],
+      entryPoints: [entryPoint],
       bundle: true,
       allowOverwrite: true,
       outfile,

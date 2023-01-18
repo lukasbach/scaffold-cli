@@ -1,4 +1,4 @@
-import "../../../src/globals";
+import "../../src/globals";
 import noindent from "noindent";
 
 const componentTemplate = noindent(`
@@ -14,6 +14,7 @@ const componentTemplate = noindent(`
     );
   };
   `);
+
 export default async () => {
   const sdk = scaffold.sdks
     .createDefaultSdk()

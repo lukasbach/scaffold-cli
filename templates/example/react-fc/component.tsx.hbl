@@ -1,9 +1,0 @@
-{{> propsType}}
-
-export const {{ componentName }}: React.FC<{  }> = props => {
-  return (
-    <>
-      hello
-    </>
-  );
-};
