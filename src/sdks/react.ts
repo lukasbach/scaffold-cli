@@ -4,18 +4,19 @@ import { createEmptySdk } from "./empty";
 export const createReactSdk = () => {
   const sdk = createEmptySdk();
   return sdk
-    .withParameterList("reactComponent", async () => [
-      await sdk.param.string("componentName").asArgument().default("My Component"),
-      await sdk.param.list("propsType").choices(["interface", "type", "inline"]).default("type"),
-    ])
-    .withPartial("propsType", (context, options) =>
+    .withParameterList("reactComponent", async () => ({
+      componentName: await sdk.param.string("componentName").asArgument().default("My Component"),
+      propsType: await sdk.param.list("propsType").optional().choices(["interface", "type", "inline"]).default("type"),
+      exportPropsType: await sdk.param.boolean("exportPropsType").optional().default(true),
+    }))
+    .withPartial("propsType", () =>
       noindent(`
-        {{#if interface}}
+        {{#ifEquals propsType "interface"}}
         {{#if exportPropsType}}export {{/if}}interface {{ pascalCase componentName }}Props {
           {{#if dummyProp}}dummy: string;{{/if}}
         }
         {{/if}}
-        {{#if type}}
+        {{#if propsType "type"}}
         {{#if exportPropsType}}export {{/if}}type {{ pascalCase componentName }}Props = {
           {{#if dummyProp}}dummy: string;{{/if}}
         }

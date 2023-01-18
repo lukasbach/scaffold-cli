@@ -75,7 +75,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
-  readonly parameterSets = new Proxy(
+  readonly parameterLists = new Proxy(
     {},
     {
       get:
@@ -83,7 +83,11 @@ export class ScaffoldSdk<T extends RuntimeData> {
         async (...params) =>
           this.runtimeData.parameterList[parameterSetKey](...params),
     }
-  ) as { [key in keyof T["parameterList"]]: (...args: Parameters<T["parameterList"][key]>) => Promise<boolean> };
+  ) as {
+    [key in keyof T["parameterList"]]: (
+      ...args: Parameters<T["parameterList"][key]>
+    ) => ReturnType<T["parameterList"][key]>;
+  };
 
   readonly param = paramEvaluator.paramTypes.reduce<{
     [key in ParamType]: (name: string) => ParameterInitializer<key>;
@@ -123,7 +127,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
   withParameterList<K extends string, S extends RuntimeData["parameterList"][string]>(
     name: K,
     parameterSet: S
-  ): ScaffoldSdk<T & { parameterSets: T["parameterList"] & { [k in K]: S } }> {
+  ): ScaffoldSdk<T & { parameterList: T["parameterList"] & { [k in K]: S } }> {
     this.runtimeData.parameterList[name] = parameterSet;
     return this as any;
   }
@@ -178,6 +182,9 @@ export class ScaffoldSdk<T extends RuntimeData> {
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
     Object.entries(otherSdk.internalRuntimeData.helpers).forEach(([key, value]) => this.withHelper(key, value));
     Object.entries(otherSdk.internalRuntimeData.partials).forEach(([key, value]) => this.withPartial(key, value));
+    Object.entries(otherSdk.internalRuntimeData.parameterList).forEach(([key, value]) =>
+      this.withParameterList(key, value)
+    );
     this.runtimeData.data = merge(this.getData, otherSdk.getData());
     return this as any;
   }
@@ -203,6 +210,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   fillTemplate(template: string) {
+    console.log("FIlling", template, "with", this.getData());
     return this.handlebars.compile(template)(this.getData());
   }
 

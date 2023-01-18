@@ -1,13 +1,36 @@
 import "../../../src/globals";
+import noindent from "noindent";
+
+const componentTemplate = noindent(`
+  {{> propsType}}
+  
+  export const {{ componentName }}: React.FC<{  }> = props => {
+    return (
+      <>
+        hello
+      </>
+    );
+  };
+  `);
 
 (async () => {
   const sdk = sdks.createDefaultSdk().mergeWith(sdks.createReactSdk());
-  sdk.setDataProperty("a.b.c", 123);
-  console.log("data is ", sdk.getData());
-  console.log(sdk.helper.camelCase("Hello World this is a captial case test"));
-  await sdk.actions.tsAddImport("src/util.ts", {
-    moduleSpecifier: "module spec",
-    defaultImport: "defaultimp",
-    namedImports: [{ name: "named1" }, { name: "named2" }],
-  });
+  const { componentName } = await sdk.parameterLists.reactComponent();
+  const filenameCase = await sdk.param
+    .list("filenameCase")
+    .optional()
+    .default("paramCase")
+    .choices([
+      { value: "camelCase", name: "camelCase.ext" },
+      { value: "pascalCase", name: "PascalCase.ext" },
+      { value: "snakeCase", name: "snake_case.ext" },
+      { value: "paramCase", name: "param-case.ext" },
+    ]);
+  const fileExtension = await sdk.param
+    .list("fileExtension")
+    .optional()
+    .default("tsx")
+    .choices(["tsx", "ts", "jsx", "js"]);
+  const fileName = `${sdk.helper[filenameCase](componentName)}.${fileExtension}`;
+  await sdk.actions.addInlineTemplate(fileName, componentTemplate);
 })();
