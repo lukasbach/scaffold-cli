@@ -206,8 +206,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
   }
 
   fillTemplate(template: string) {
-    console.log("Filling", template, "with", this.getData());
-    console.log(this.handlebars.compile(template)(this.getData()));
     return this.handlebars.compile(template)(this.getData());
   }
 

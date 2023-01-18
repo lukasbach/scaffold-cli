@@ -2,9 +2,11 @@ import "../../../src/globals";
 import noindent from "noindent";
 
 const componentTemplate = noindent(`
+  {{{ reactImportStatement }}}
+  
   {{> propsType }}
   
-  export const {{ pascalCase componentName }}: React.FC<{  }> = props => {
+  export const {{ pascalCase componentName }}: {{ reactSymbol "FC" }}<{{> propsName }}> = props => {
     return (
       <>
         hello
@@ -14,7 +16,8 @@ const componentTemplate = noindent(`
   `);
 
 (async () => {
-  const sdk = sdks.createDefaultSdk().mergeWith(sdks.createReactSdk());
+  const sdk = sdks.createDefaultSdk().mergeWith(sdks.createReactSdk()).mergeWith(sdks.createJavascriptSdk());
+  sdk.setDataProperty("reactImports", ["FC"]);
   const { componentName } = await sdk.parameterLists.reactComponent();
   const filenameCase = await sdk.param
     .list("filenameCase")

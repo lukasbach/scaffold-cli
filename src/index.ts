@@ -3,7 +3,6 @@ import { Command } from "commander";
 import * as fs from "fs-extra";
 import * as path from "path";
 
-import * as handlebars from "handlebars";
 import { listCommand } from "./commands/list";
 import { newCommand } from "./commands/new";
 import { logger } from "./core/logger";
@@ -11,12 +10,6 @@ import * as sdks from "./sdks";
 import { fileNames } from "./util";
 
 (async () => {
-  const hb = handlebars.create();
-  hb.registerHelper("camelCase", (await import("change-case")).camelCase);
-  hb.registerPartial("part", '{{camelCase "jasdhfaskldjf asjdklfh sjakldf haksjldf"}}');
-  const val = hb.compile("{{>part}}")({ abc: 123 });
-  console.log("VALUE", val);
-
   global.sdks = sdks;
   global.execa = await import("execa");
   global.git = await import("simple-git");
