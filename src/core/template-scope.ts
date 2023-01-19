@@ -7,6 +7,8 @@ import { TemplateRootData, TemplateUsageDeclaration } from "../types";
 export class TemplateScope {
   private loadedTemplates: Record<string, TemplateUsageDeclaration> = {};
 
+  private repos: { localPath: string; isRemote: boolean }[] = [];
+
   constructor(private cwd: string) {}
 
   async initialize() {
@@ -49,6 +51,10 @@ export class TemplateScope {
     return this.loadedTemplates;
   }
 
+  getRepositories() {
+    return this.repos;
+  }
+
   private async resolveTemplateSourceFilePath(sourceString: string) {
     if (!fs.existsSync(sourceString)) {
       if (fs.existsSync(`${sourceString}.ts`)) {
@@ -71,24 +77,26 @@ export class TemplateScope {
   }
 
   private async resolveRepoPath(templateRoot: TemplateRootData, repoPath: string) {
-    const localPath = path.join(path.dirname(templateRoot.path), repoPath);
+    const relativePath = path.join(path.dirname(templateRoot.path), repoPath);
 
-    if (fs.existsSync(localPath)) {
-      return localPath;
+    if (fs.existsSync(relativePath)) {
+      this.repos.push({ localPath: relativePath, isRemote: false });
+      return relativePath;
     }
 
     const [owner, repo, ...folderPieces] = repoPath.split("/");
     const gitFolderParent = path.join(fileNames.localReposDir, "repos");
     const gitFolder = path.join(gitFolderParent, `${owner}-${repo}`);
-    const targetFolder = path.join(gitFolder, ...folderPieces);
+    const localPath = path.join(gitFolder, ...folderPieces);
+    this.repos.push({ localPath, isRemote: true });
 
-    if (fs.existsSync(targetFolder)) {
-      return targetFolder;
+    if (fs.existsSync(localPath)) {
+      return localPath;
     }
 
     if (fs.existsSync(gitFolder)) {
       throw new Error(
-        `Repo is already cloned to ${gitFolder}, but folder ${targetFolder} does not exist. ` +
+        `Repo is already cloned to ${gitFolder}, but folder ${localPath} does not exist. ` +
           `You can try to update the repo with "scaf update".`
       );
     }
@@ -99,11 +107,11 @@ export class TemplateScope {
     await simpleGit().clone(githubHost, gitFolder);
     console.log(`Cloned ${githubHost} to ${gitFolder}`);
 
-    if (!fs.existsSync(targetFolder)) {
+    if (!fs.existsSync(localPath)) {
       throw new Error(`Repo ${githubHost} does not contain the path ${folderPieces.join("/")}.`);
     }
 
-    return targetFolder;
+    return localPath;
   }
 
   private async initRepository(templateRoot: TemplateRootData, repoPath: string) {
