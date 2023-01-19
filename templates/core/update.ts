@@ -6,8 +6,7 @@ export default async () => {
   await sdk.do(async () => {
     for (const { localPath, isRemote } of scaffold.templateScope.getRepositories()) {
       if (isRemote) {
-        await git.default(localPath).pull();
-        console.log(`Pulled ${localPath}`);
+        await scaffold.templateScope.updateRepo(localPath);
       }
     }
   });

@@ -56,6 +56,23 @@ export class TemplateScope {
     return this.repos;
   }
 
+  async updateRepo(gitFolder: string) {
+    scaffold.logger.log(`Pulling ${gitFolder}...`);
+    await simpleGit(gitFolder).pull();
+    await this.installRepoDeps(gitFolder);
+  }
+
+  private async installRepoDeps(gitFolder: string) {
+    const topLevelFiles = await fs.readdir(gitFolder);
+    if (topLevelFiles.includes("yarn.lock")) {
+      scaffold.logger.log(`Updating dependencies for ${gitFolder} with yarn...`);
+      $("yarn", { cwd: gitFolder });
+    } else if (topLevelFiles.includes("package.json")) {
+      scaffold.logger.log(`Updating dependencies for ${gitFolder} with npm install...`);
+      $("npm install", { cwd: gitFolder });
+    }
+  }
+
   private async resolveTemplateSourceFilePath(sourceString: string) {
     if (!fs.existsSync(sourceString)) {
       if (fs.existsSync(`${sourceString}.ts`)) {
@@ -105,8 +122,9 @@ export class TemplateScope {
     await fs.ensureDir(gitFolderParent);
 
     const githubHost = `https://github.com/${owner}/${repo}.git`;
+    console.log(`Cloning ${githubHost} to ${gitFolder}...`);
     await simpleGit().clone(githubHost, gitFolder);
-    console.log(`Cloned ${githubHost} to ${gitFolder}`);
+    await this.installRepoDeps(gitFolder);
 
     if (!fs.existsSync(localPath)) {
       throw new Error(`Repo ${githubHost} does not contain the path ${folderPieces.join("/")}.`);
