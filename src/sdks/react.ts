@@ -6,6 +6,7 @@ export const createReactSdk = () => {
   return sdk
     .withActionSet({
       reactComponentParameters: async () => ({
+        // TODO revamp parameter lists; allow template to specify which params exactly are needed, and allow them to customize and await them afterwards
         componentName: await sdk.param
           .string("componentName")
           .asArgument()
@@ -68,6 +69,6 @@ export const createReactSdk = () => {
         }
         {{/ifEquals}}
     `),
-      propsName: "{{ pascalCase componentName }}Props",
+      propsName: "{{ pascalCase componentName }}Props", // TODO inline props
     });
 };

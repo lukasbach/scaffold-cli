@@ -24,6 +24,8 @@ const template = noindent(`
     #     importReactSymbols: true
   `);
 
+// TODO include additional top-level config attributes: defaults, preActions, postActions, skipActions
+
 const readmeAddition = noindent(`
   ## Scaffold Templates
   
@@ -60,6 +62,9 @@ export default async () => {
       "lukasbach/scaffold-cli/templates/react",
       "lukasbach/scaffold-cli/templates/monorepo",
     ]);
+
+  // TODO offer to prepare local template folder
+  // TODO offer to create files without comments and examples
 
   await sdk.writeToTarget("./.scaf.yml", sdk.fillTemplate(template));
   if (addToReadme) {
