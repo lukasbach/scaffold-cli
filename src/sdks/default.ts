@@ -5,11 +5,19 @@ import { createEmptySdk } from "./empty";
 export const createDefaultSdk = () => {
   const sdk = createEmptySdk();
   return sdk
-    .withHelper("ifEquals", function ifEquals(arg1, arg2, options) {
-      if (arguments.length !== 3) {
-        throw new Error("#if requires exactly one argument");
-      }
-      return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+    .withHelperSet({
+      ifEquals(arg1, arg2, options) {
+        if (arguments.length !== 3) {
+          throw new Error("#ifEquals requires exactly 2 arguments");
+        }
+        return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+      },
+      unlessEquals(arg1, arg2, options) {
+        if (arguments.length !== 3) {
+          throw new Error("#unlessEquals requires exactly 2 arguments");
+        }
+        return arg1 !== arg2 ? options.fn(this) : options.inverse(this);
+      },
     })
     .withActionSet({
       filenameParameters: async (symbolName: string, extensions: string[]) => {
@@ -76,5 +84,8 @@ export const createDefaultSdk = () => {
       pathCase: changeCase.pathCase,
       sentenceCase: changeCase.sentenceCase,
       snakeCase: changeCase.snakeCase,
+      curly(options) {
+        return new sdk.hb.SafeString(`{${options.fn(this)}}`).toString();
+      },
     });
 };

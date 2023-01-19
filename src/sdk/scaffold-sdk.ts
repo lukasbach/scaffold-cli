@@ -80,20 +80,21 @@ export class ScaffoldSdk<T extends RuntimeData> {
   readonly param = new Proxy(
     {},
     {
-      get: (_, paramType: string) => async () => {
+      get: (_, paramTypeOrParamTemplateKey: string) => {
         const isParamType = (p: string): p is ParamType => scaffold.paramEvaluator.paramTypes.includes(p as ParamType);
-        if (isParamType(paramType)) {
+
+        if (isParamType(paramTypeOrParamTemplateKey)) {
           return (paramKey: string) => {
-            const param = new ParameterInitializer(paramKey, paramType, this);
+            const param = new ParameterInitializer(paramKey, paramTypeOrParamTemplateKey, this);
             scaffold.introspection.registerParameter(param);
             return param;
           };
         }
-        return () => this.runtimeData.parameterTemplates[paramType];
+        return this.runtimeData.parameterTemplates[paramTypeOrParamTemplateKey];
       },
     }
   ) as {
-    [key in keyof T["parameterTemplates"]]: () => T["parameterTemplates"][key];
+    [key in keyof T["parameterTemplates"]]: T["parameterTemplates"][key];
   } & { [key in ParamType]: (paramKey: string) => ParameterInitializer<key> };
 
   setTemplateName(name: string) {
@@ -138,7 +139,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
-  withParameterTemplate<K extends string, P extends ParameterInitializer<any>>(
+  withParameterTemplate<K extends string, P extends () => ParameterInitializer<any>>(
     name: K,
     parameter: P
   ): ScaffoldSdk<T & { parameterTemplates: T["parameterTemplates"] & { [k in K]: P } }> {
@@ -186,6 +187,9 @@ export class ScaffoldSdk<T extends RuntimeData> {
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
     Object.entries(otherSdk.internalRuntimeData.helpers).forEach(([key, value]) => this.withHelper(key, value));
     Object.entries(otherSdk.internalRuntimeData.partials).forEach(([key, value]) => this.withPartial(key, value));
+    Object.entries(otherSdk.internalRuntimeData.parameterTemplates).forEach(([key, value]) =>
+      this.withParameterTemplate(key, value)
+    );
     return this as any;
   }
 

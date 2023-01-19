@@ -6,5 +6,5 @@ export type RuntimeData = {
   conditions: Record<string, (...args: any[]) => boolean | Promise<boolean>>;
   helpers: Record<string, HelperDelegate>;
   partials: Record<string, Template>;
-  parameterTemplates: Record<string, ParameterInitializer<any>>;
+  parameterTemplates: Record<string, () => ParameterInitializer<any>>;
 };
