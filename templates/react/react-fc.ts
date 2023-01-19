@@ -24,16 +24,6 @@ export default async () => {
   sdk.setTemplateDescription("Description Text");
   sdk.setDataProperty("reactImports", ["FC"]);
   const { componentName } = await sdk.actions.reactComponentParameters();
-  const filenameCase = await sdk.param
-    .list("filenameCase")
-    .default("paramCase")
-    .choices([
-      { value: "camelCase", name: "camelCase.ext" },
-      { value: "pascalCase", name: "PascalCase.ext" },
-      { value: "snakeCase", name: "snake_case.ext" },
-      { value: "paramCase", name: "param-case.ext" },
-    ]);
-  const fileExtension = await sdk.param.list("fileExtension").default("tsx").choices(["tsx", "ts", "jsx", "js"]);
-  const fileName = `${sdk.helper[filenameCase](componentName)}.${fileExtension}`;
+  const fileName = await sdk.actions.filenameParameters(componentName, ["tsx", "ts", "jsx", "js"]);
   await sdk.actions.addInlineTemplate(fileName, componentTemplate);
 };

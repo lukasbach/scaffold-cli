@@ -12,6 +12,19 @@ export const createDefaultSdk = () => {
       return arg1 === arg2 ? options.fn(this) : options.inverse(this);
     })
     .withActionSet({
+      filenameParameters: async (symbolName: string, extensions: string[]) => {
+        const filenameCase = await sdk.param
+          .list("filenameCase")
+          .default("paramCase")
+          .choices([
+            { value: "camelCase", name: "camelCase.ext" },
+            { value: "pascalCase", name: "PascalCase.ext" },
+            { value: "snakeCase", name: "snake_case.ext" },
+            { value: "paramCase", name: "param-case.ext" },
+          ]);
+        const fileExtension = await sdk.param.list("fileExtension").default("tsx").choices(extensions);
+        return `${sdk.helper[filenameCase](symbolName)}.${fileExtension}`;
+      },
       addFile: async (templateFile: string, target: string) => {
         const templateContents = await sdk.getTemplateFileContents(templateFile);
         await sdk.writeToTarget(sdk.fillTemplate(target), sdk.fillTemplate(templateContents));
