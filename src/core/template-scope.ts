@@ -12,9 +12,10 @@ export class TemplateScope {
   constructor(private cwd: string) {}
 
   async initialize() {
+    const potentialTemplateRoots = [...this.getAllParentPaths(), os.homedir()];
     const templateRoots = (
       await Promise.all(
-        this.getAllParentPaths().map<Promise<TemplateRootData | null>>(async folder => {
+        potentialTemplateRoots.map<Promise<TemplateRootData | null>>(async folder => {
           const templateRoot = path.join(folder, fileNames.templateRoot);
           if (fs.existsSync(templateRoot)) {
             return {
@@ -28,13 +29,13 @@ export class TemplateScope {
     ).filter(isNotNullish);
 
     for (const templateRoot of templateRoots) {
-      for (const repo of templateRoot.repositories) {
+      for (const repo of templateRoot.repositories ?? []) {
         await this.initRepository(templateRoot, repo);
       }
     }
 
     for (const templateRoot of templateRoots) {
-      for (const [key, templateData] of Object.entries(templateRoot.templates)) {
+      for (const [key, templateData] of Object.entries(templateRoot.templates ?? {})) {
         const source = path.join(
           path.dirname(templateRoot.path),
           typeof templateData === "string" ? templateData : templateData.source

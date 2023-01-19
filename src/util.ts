@@ -23,7 +23,7 @@ const appData =
   process.env.APPDATA ||
   (process.platform === "darwin" ? `${process.env.HOME}/Library/Preferences` : `${process.env.HOME}/.local/share`);
 export const fileNames = {
-  templateRoot: "scaffold-templates.yml",
+  templateRoot: ".scaf.yml",
   tempDir: path.join(os.tmpdir(), "scaffold-cli"),
   localReposDir: path.join(appData, "scaffold-cli"),
 };

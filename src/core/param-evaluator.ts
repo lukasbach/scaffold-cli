@@ -148,7 +148,7 @@ export class ParamEvaluator {
   }
 
   private async evaluateList<O extends boolean>(
-    param: ParamConfig<"list" | "expand", O>,
+    param: ParamConfig<"list", O>,
     cliValue?: string | true,
     type = "list"
   ) {

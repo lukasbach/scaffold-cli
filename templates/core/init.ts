@@ -61,7 +61,7 @@ export default async () => {
       "lukasbach/scaffold-cli/templates/monorepo",
     ]);
 
-  await sdk.writeToTarget("./scaffold-templates.yml", sdk.fillTemplate(template));
+  await sdk.writeToTarget("./.scaf.yml", sdk.fillTemplate(template));
   if (addToReadme) {
     await sdk.appendWriteToTarget("./readme.md", `\n\n${readmeAddition}`);
   }

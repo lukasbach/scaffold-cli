@@ -9,7 +9,7 @@ import { scaffold } from "./scaffold";
   global.scaffold = scaffold;
   global.execa = await import("execa");
   global.git = await import("simple-git");
-  global.fs = await import("fs-extra");
+  global.fs = fs;
   global.os = await import("os");
   global.yaml = await import("yaml");
   global.changeCase = await import("change-case");
