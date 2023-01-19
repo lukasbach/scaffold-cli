@@ -4,42 +4,39 @@ import { createEmptySdk } from "./empty";
 export const createReactSdk = () => {
   const sdk = createEmptySdk();
   return sdk
-    .withActionSet({
-      reactComponentParameters: async () => ({
-        // TODO revamp parameter lists; allow template to specify which params exactly are needed, and allow them to customize and await them afterwards
-        componentName: await sdk.param
-          .string("componentName")
-          .asArgument()
-          .required()
-          .default("My Component")
-          .descr("The name of the React component"),
-        propsType: await sdk.param
-          .list("propsType")
-          .choices(["interface", "type", "inline"])
-          .default("type")
-          .descr(
-            "The template will create a TypeScript type for the component props. This will determine " +
-              "whether the props type will be declared as interface, type, or inlined into the FC type generic parameter."
-          ),
-        exportPropsType: await sdk.param
-          .boolean("exportPropsType")
-          .default(true)
-          .descr("Determines if the props type will be exported."),
-        dummyProp: await sdk.param
-          .boolean("dummyProp")
-          .default(false)
-          .descr(
-            "If enabled, a sample property will be included in the prop type. This can help a subsequent " +
-              "linter fix call not to clear up the empty props type."
-          ),
-        importReactSymbols: await sdk.param
-          .boolean("importReactSymbols")
-          .default(false)
-          .descr(
-            "If disabled, react symbols will be used like `React.FC`. If enabled, all react types and " +
-              "symbols used will be imported and directly used, like `FC`."
-          ),
-      }),
+    .withParameterTemplateSet({
+      componentName: sdk.param
+        .string("componentName")
+        .asArgument()
+        .required()
+        .default("My Component")
+        .descr("The name of the React component"),
+      propsType: sdk.param
+        .list("propsType")
+        .choices(["interface", "type", "inline"])
+        .default("type")
+        .descr(
+          "The template will create a TypeScript type for the component props. This will determine " +
+            "whether the props type will be declared as interface, type, or inlined into the FC type generic parameter."
+        ),
+      exportPropsType: sdk.param
+        .boolean("exportPropsType")
+        .default(true)
+        .descr("Determines if the props type will be exported."),
+      dummyProp: sdk.param
+        .boolean("dummyProp")
+        .default(false)
+        .descr(
+          "If enabled, a sample property will be included in the prop type. This can help a subsequent " +
+            "linter fix call not to clear up the empty props type."
+        ),
+      importReactSymbols: sdk.param
+        .boolean("importReactSymbols")
+        .default(false)
+        .descr(
+          "If disabled, react symbols will be used like `React.FC`. If enabled, all react types and " +
+            "symbols used will be imported and directly used, like `FC`."
+        ),
     })
     .withHelperSet({
       reactImportStatement(options) {

@@ -23,7 +23,11 @@ export default async () => {
   sdk.setTemplateName("React FC");
   sdk.setTemplateDescription("Description Text");
   sdk.setDataProperty("reactImports", ["FC"]);
-  const { componentName } = await sdk.actions.reactComponentParameters();
+  const componentName = await sdk.param.componentName();
+  await sdk.param.dummyProp();
+  await sdk.param.exportPropsType();
+  await sdk.param.importReactSymbols();
+  await sdk.param.propsType();
   const fileName = await sdk.actions.filenameParameters(componentName, ["tsx", "ts", "jsx", "js"]);
   await sdk.actions.addInlineTemplate(fileName, componentTemplate);
 };

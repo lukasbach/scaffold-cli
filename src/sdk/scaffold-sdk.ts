@@ -14,6 +14,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     conditions: {},
     partials: {},
     helpers: {},
+    parameterTemplates: {},
   };
 
   private tsProject?: TsProject;
@@ -76,19 +77,24 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
-  readonly param = scaffold.paramEvaluator.paramTypes.reduce<{
-    [key in ParamType]: (name: string) => ParameterInitializer<key>;
-  }>(
-    (map, type) => ({
-      ...map,
-      [type]: (key: string) => {
-        const param = new ParameterInitializer(key, type, this);
-        scaffold.introspection.registerParameter(param);
-        return param;
+  readonly param = new Proxy(
+    {},
+    {
+      get: (_, paramType: string) => async () => {
+        const isParamType = (p: string): p is ParamType => scaffold.paramEvaluator.paramTypes.includes(p as ParamType);
+        if (isParamType(paramType)) {
+          return (paramKey: string) => {
+            const param = new ParameterInitializer(paramKey, paramType, this);
+            scaffold.introspection.registerParameter(param);
+            return param;
+          };
+        }
+        return () => this.runtimeData.parameterTemplates[paramType];
       },
-    }),
-    {} as any
-  );
+    }
+  ) as {
+    [key in keyof T["parameterTemplates"]]: () => T["parameterTemplates"][key];
+  } & { [key in ParamType]: (paramKey: string) => ParameterInitializer<key> };
 
   setTemplateName(name: string) {
     scaffold.introspection.setTemplateName(name);
@@ -132,6 +138,14 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
+  withParameterTemplate<K extends string, P extends ParameterInitializer<any>>(
+    name: K,
+    parameter: P
+  ): ScaffoldSdk<T & { parameterTemplates: T["parameterTemplates"] & { [k in K]: P } }> {
+    this.runtimeData.parameterTemplates[name] = parameter;
+    return this as any;
+  }
+
   withActionSet<S extends RuntimeData["actions"]>(set: S): ScaffoldSdk<T & { actions: T["actions"] & S }> {
     Object.entries(set).forEach(([key, value]) => this.withAction(key, value));
     return this as any;
@@ -152,6 +166,13 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
+  withParameterTemplateSet<S extends RuntimeData["parameterTemplates"]>(
+    set: S
+  ): ScaffoldSdk<T & { parameterTemplates: T["parameterTemplates"] & S }> {
+    Object.entries(set).forEach(([key, value]) => this.withParameterTemplate(key, value));
+    return this as any;
+  }
+
   mergeWith<O extends RuntimeData>(
     otherSdk: ScaffoldSdk<O>
   ): ScaffoldSdk<{
@@ -159,6 +180,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     conditions: T["conditions"] & O["conditions"];
     helpers: T["helpers"] & O["helpers"];
     partials: T["partials"] & O["partials"];
+    parameterTemplates: T["parameterTemplates"] & O["parameterTemplates"];
   }> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
