@@ -66,7 +66,7 @@ export class Introspection {
     this.hb.registerPartial("optionDetails", "{{#if shortKey}}-{{shortKey}},{{/if}}--{{key}}");
     this.hb.registerPartial(
       "invokeCommand",
-      "scaffold {{templateKey}} " +
+      "scaf {{templateKey}} " +
         "{{#each arguments}}{{#if optional}}[{{/if}}<{{key}}>{{#if optional}}]{{/if}} {{/each}}" +
         "{{#each options}}{{#if optional}}[{{/if}}{{>optionDetails}}{{#if optional}}]{{/if}} {{/each}}"
     );
