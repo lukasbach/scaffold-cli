@@ -23,7 +23,7 @@ export default async () => {
   sdk.setTemplateName("React FC");
   sdk.setTemplateDescription("Description Text");
   sdk.setDataProperty("reactImports", ["FC"]);
-  const { componentName } = await sdk.parameterLists.reactComponent();
+  const { componentName } = await sdk.actions.reactComponentParameters();
   const filenameCase = await sdk.param
     .list("filenameCase")
     .default("paramCase")

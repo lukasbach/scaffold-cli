@@ -14,7 +14,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     conditions: {},
     partials: {},
     helpers: {},
-    parameterList: {},
   };
 
   private tsProject?: TsProject;
@@ -77,20 +76,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     }
   ) as { [key in keyof T["conditions"]]: (...args: Parameters<T["conditions"][key]>) => Promise<boolean> };
 
-  readonly parameterLists = new Proxy(
-    {},
-    {
-      get:
-        (_, parameterSetKey: string) =>
-        async (...params) =>
-          this.runtimeData.parameterList[parameterSetKey](...params),
-    }
-  ) as {
-    [key in keyof T["parameterList"]]: (
-      ...args: Parameters<T["parameterList"][key]>
-    ) => ReturnType<T["parameterList"][key]>;
-  };
-
   readonly param = scaffold.paramEvaluator.paramTypes.reduce<{
     [key in ParamType]: (name: string) => ParameterInitializer<key>;
   }>(
@@ -138,14 +123,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
-  withParameterList<K extends string, S extends RuntimeData["parameterList"][string]>(
-    name: K,
-    parameterSet: S
-  ): ScaffoldSdk<T & { parameterList: T["parameterList"] & { [k in K]: S } }> {
-    this.runtimeData.parameterList[name] = parameterSet;
-    return this as any;
-  }
-
   withPartial<K extends string, P extends Template>(
     name: K,
     partial: P
@@ -175,13 +152,6 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
-  withParameterListSet<S extends RuntimeData["parameterList"]>(
-    set: S
-  ): ScaffoldSdk<T & { conditions: T["parameterList"] & S }> {
-    Object.entries(set).forEach(([key, value]) => this.withParameterList(key, value));
-    return this as any;
-  }
-
   mergeWith<O extends RuntimeData>(
     otherSdk: ScaffoldSdk<O>
   ): ScaffoldSdk<{
@@ -189,15 +159,11 @@ export class ScaffoldSdk<T extends RuntimeData> {
     conditions: T["conditions"] & O["conditions"];
     helpers: T["helpers"] & O["helpers"];
     partials: T["partials"] & O["partials"];
-    parameterList: T["parameterList"] & O["parameterList"];
   }> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
     Object.entries(otherSdk.internalRuntimeData.helpers).forEach(([key, value]) => this.withHelper(key, value));
     Object.entries(otherSdk.internalRuntimeData.partials).forEach(([key, value]) => this.withPartial(key, value));
-    Object.entries(otherSdk.internalRuntimeData.parameterList).forEach(([key, value]) =>
-      this.withParameterList(key, value)
-    );
     return this as any;
   }
 
