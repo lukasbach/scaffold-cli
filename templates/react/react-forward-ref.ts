@@ -29,6 +29,8 @@ export default async () => {
     .mergeWith(scaffold.sdks.createJavascriptSdk());
   sdk.setTemplateName("React Component with forwarded ref");
   sdk.setTemplateDescription("Description Text");
+  sdk.setDataProperty("propsTypeSuffix", "Props");
+  sdk.setDataProperty("reactImports", ["FC"]); // TODO
   await sdk.param.string("elementType").default("div").descr("The HTML element type used for the forwarded ref");
   await sdk.param.string("innerRef").default("elementRef").descr("The name of the variable used in the useRef call.");
   const includeUseRef = await sdk.param

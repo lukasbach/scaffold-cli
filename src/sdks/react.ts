@@ -59,13 +59,13 @@ export const createReactSdk = () => {
       propsContents: "{{#if dummyProp}}dummy: string{{/if}}",
       propsType: noindent(`
         {{#ifEquals propsType "interface"}}
-        {{#if exportPropsType}}export {{/if}}interface {{ pascalCase componentName }}Props {
+        {{#if exportPropsType}}export {{/if}}interface {{ pascalCase componentName }}{{ propsTypeSuffix }} {
           {{> propsContents}}
         
         }
         {{/ifEquals}}
         {{#ifEquals propsType "type"}}
-        {{#if exportPropsType}}export {{/if}}type {{ pascalCase componentName }}Props = {
+        {{#if exportPropsType}}export {{/if}}type {{ pascalCase componentName }}{{ propsTypeSuffix }} = {
           {{> propsContents}}
         
         }
@@ -73,6 +73,6 @@ export const createReactSdk = () => {
       `),
       propsName:
         '{{#ifEquals propsType "inline"}}{{#curly}} {{> propsContents}} {{/curly}}{{/ifEquals}}' +
-        '{{#unlessEquals propsType "inline"}}{{ pascalCase componentName }}Props{{/unlessEquals}}',
+        '{{#unlessEquals propsType "inline"}}{{ pascalCase componentName }}{{ propsTypeSuffix }}{{/unlessEquals}}',
     });
 };

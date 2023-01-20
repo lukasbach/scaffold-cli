@@ -23,6 +23,7 @@ export default async () => {
   sdk.setTemplateName("React FC");
   sdk.setTemplateDescription("Description Text");
   sdk.setDataProperty("reactImports", ["FC"]);
+  sdk.setDataProperty("propsTypeSuffix", "Props");
   const componentName = await sdk.param.componentName();
   await sdk.param.dummyProp();
   await sdk.param.exportPropsType();

@@ -58,8 +58,9 @@ export default async () => {
     .default([])
     .required()
     .choices([
-      "lukasbach/scaffold-cli/templates/typescript",
-      "lukasbach/scaffold-cli/templates/react",
+      "lukasbach/scaffold-cli/templates/web", // TODO packagejson, github actions, github community standards, webpack?, tsconfig,
+      "lukasbach/scaffold-cli/templates/test",
+      "lukasbach/scaffold-cli/templates/react", // TODO hook file, redux?, storybook,
       "lukasbach/scaffold-cli/templates/monorepo",
     ]);
 
