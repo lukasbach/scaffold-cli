@@ -73,7 +73,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return `${cliValue}`;
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         await inquirer.prompt({
           type: type as any,
@@ -91,7 +91,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return parseFloat(`${cliValue}`);
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         await inquirer.prompt({
           type: "number",
@@ -109,7 +109,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return cliValue === true || cliValue.toLowerCase() === "true";
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         await inquirer.prompt({
           type: "confirm",
@@ -127,7 +127,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return cliValue === true || cliValue.toLowerCase() === "true";
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         (
           await inquirer.prompt({
@@ -155,7 +155,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return `${cliValue}`;
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         await inquirer.prompt({
           type: type as any,
@@ -178,7 +178,7 @@ export class ParamEvaluator {
     if (cliValue) {
       return `${cliValue}`;
     }
-    if (!param.optional) {
+    if (this.shouldAskParam(param)) {
       return (
         await inquirer.prompt({
           type: type as any,
@@ -191,5 +191,9 @@ export class ParamEvaluator {
     }
 
     return undefined;
+  }
+
+  private shouldAskParam(param: ParamConfig<any>) {
+    return scaffold.args.askAllParams() || !param.optional;
   }
 }

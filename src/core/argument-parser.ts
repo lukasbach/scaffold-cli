@@ -27,4 +27,8 @@ export class ArgumentParser {
   getTemplateName() {
     return this.templateName;
   }
+
+  askAllParams() {
+    return !!this.getOption("all", "a");
+  }
 }

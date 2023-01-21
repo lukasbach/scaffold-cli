@@ -39,7 +39,8 @@ module.exports = {
     "@typescript-eslint/no-shadow": "off",
     "no-plusplus": "off",
     "class-methods-use-this": "off",
-    "import/no-cycle": "off"
+    "import/no-cycle": "off",
+    "prefer-rest-params": "off"
   },
   ignorePatterns: ["lib", "*.js"],
 };
