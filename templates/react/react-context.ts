@@ -1,22 +1,24 @@
 import "../../src/globals";
 import noindent from "noindent";
+import { isNotNullish } from "../../src/util";
 
 const typeTemplate = "{{> propsType }}";
 const contextValueTemplate =
-  'export const {{ pascalCase ctxName }} = {{ reactSymbol "createContext" }}<{{> propsName}}>(null);';
+  'export const {{ contextVariable }} = {{ reactSymbol "createContext" }}<{{> propsName }}>(null as any); // FIXME';
 const hookTemplate =
-  'export const use{{ pascalCase ctxName }} = () => {{ reactSymbol "useContext" }}({{ pascalCase ctxName }}{{ pascalCase contextVariableSuffix }});';
+  'export const use{{ pascalCase ctxName }} = () => {{ reactSymbol "useContext" }}({{ contextVariable }});';
 
 const providerTemplate = noindent(`
-  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }} = props => {
+  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }} = {{ propsArguments children }} => {
     return (
-      <{{ pascalCase ctxName }}
+      <{{ contextVariable }}.Provider value={null as any}>
+        {{ prop children }}
+      </{{ contextVariable }}.Provider>
     );
   }
-  {{> propsType }}
   `);
 
-const withReactImport = (tpl: string) => `{{{ reactImportStatement }}}\n\n${tpl}`;
+const withReactImport = (prefix: string, tpl: string) => `${prefix}{{{ reactImportStatement }}}\n\n${tpl}`;
 
 export default async () => {
   const sdk = scaffold.sdks
@@ -25,28 +27,26 @@ export default async () => {
     .mergeWith(scaffold.sdks.createJavascriptSdk());
   sdk.setTemplateName("React Context");
   sdk.setTemplateDescription("Description Text");
-  sdk.setDataProperty("reactImports", ["FC"]); // TODO
+
   const ctxName = await sdk.param
     .string("ctxName")
     .required()
-    .default("My Context")
+    .default("Hello World")
     .descr("Name of the context")
     .asArgument();
-  sdk.setDataProperty("propsName", ctxName);
-  sdk.setDataProperty("propsName", ctxName);
+  sdk.setDataProperty("componentName", ctxName);
   await sdk.param
     .string("propsTypeSuffix")
-    .required()
     .default("ContextType")
     .descr('Suffix for the context type name. e.g. "type MyContextName*Suffix* = {..."')
     .asArgument();
   await sdk.param
     .string("contextVariableSuffix")
-    .required()
     .default("Context")
     .descr('Suffix for the context instance variable name. e.g. "const MyContextName*Suffix* = createContext(..."')
     .asArgument();
-  const fileExtension = await sdk.param.list("fileExtension").default("tsx").choices(["tsx", "ts", "jsx", "js"]);
+
+  await sdk.param.list("fileExtension").default("tsx").choices(["tsx", "ts", "jsx", "js"]);
 
   const placeTypeInDedicatedFile = await sdk.param
     .boolean("placeTypeInDedicatedFile")
@@ -92,10 +92,62 @@ export default async () => {
           .default("{{ paramCase ctxName }}.context.{{ fileExtension }}")
           .descr("The name of the file that contains the context value. May be a template string.");
 
+  // TODO what for? sdk.setDataProperty("propsName", ctxName);
+  // sdk.withPartial("contextVariable", "{{ pascalCase ctxName }}{{ pascalCase contextVariableSuffix }}");
+  sdk.withHelper("contextVariable", () =>
+    sdk.fillTemplate("{{ pascalCase ctxName }}{{ pascalCase contextVariableSuffix }}")
+  );
+
+  if (placeTypeInDedicatedFile) {
+    sdk.setDataProperty("exportPropsType", true);
+  } else {
+    await sdk.param.exportPropsType();
+  }
+
   await sdk.param.dummyProp();
-  await sdk.param.exportPropsType();
   await sdk.param.importReactSymbols();
+  await sdk.param.deconstructProps();
   await sdk.param.propsType().descr("Should the type for the context props be declared as type, interface, or inline?");
-  const fileName = await sdk.actions.filenameParameters(componentName, ["tsx", "ts", "jsx", "js"]);
-  await sdk.actions.addInlineTemplate(fileName, componentTemplate);
+
+  if (placeTypeInDedicatedFile) {
+    sdk.setDataProperty("reactImports", ["ReactNode"]);
+    await sdk.actions.addInlineTemplate(typeFileTemplate, withReactImport("", typeTemplate));
+  }
+
+  if (placeHookInDedicatedFile) {
+    sdk.setDataProperty("reactImports", ["useContext"]);
+    await sdk.actions.addInlineTemplate(
+      hookFileTemplate,
+      withReactImport("{{ namedImport ( contextVariable) }}\n", hookTemplate)
+    );
+  }
+
+  if (placeProviderInDedicatedFile) {
+    sdk.setDataProperty("reactImports", ["FC"].filter(isNotNullish));
+    await sdk.actions.addInlineTemplate(
+      providerFileTemplate,
+      withReactImport("{{ namedImport ( contextVariable) }}\n", providerTemplate) // TODO
+    );
+  }
+
+  sdk.setDataProperty(
+    "reactImports",
+    [
+      !placeTypeInDedicatedFile ? "ReactNode" : null,
+      !placeHookInDedicatedFile ? "useContext" : null,
+      !placeProviderInDedicatedFile ? "FC" : null,
+    ].filter(isNotNullish)
+  );
+
+  const combinedValueTemplate = [
+    !placeTypeInDedicatedFile ? typeTemplate : null,
+    contextValueTemplate,
+    !placeHookInDedicatedFile ? hookTemplate : null,
+    !placeProviderInDedicatedFile ? providerTemplate : null,
+  ]
+    .filter(isNotNullish)
+    .join("\n");
+
+  await sdk.actions.addInlineTemplate(ctxFileTemplate, withReactImport("", combinedValueTemplate));
+  console.log(sdk.getData());
 };

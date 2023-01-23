@@ -134,7 +134,7 @@ export class ParamEvaluator {
             type: "list",
             name: param.key,
             message: param.description,
-            default: param.default,
+            default: param.default ? "Yes" : "No",
             choices: [
               { key: "true", value: "Yes" },
               { key: "false", value: "No" },

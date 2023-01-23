@@ -31,6 +31,8 @@ export const createReactSdk = () => {
             "If enabled, a sample property will be included in the prop type. This can help a subsequent " +
               "linter fix call not to clear up the empty props type."
           ),
+      propsWithChildren: () =>
+        sdk.param.boolean("propsWithChildren").default(true).descr("Include a children prop in the component props."),
       importReactSymbols: () =>
         sdk.param
           .boolean("importReactSymbols")
@@ -38,6 +40,14 @@ export const createReactSdk = () => {
           .descr(
             "If disabled, react symbols will be used like `React.FC`. If enabled, all react types and " +
               "symbols used will be imported and directly used, like `FC`."
+          ),
+      deconstructProps: () =>
+        sdk.param
+          .boolean("deconstructProps")
+          .default(true)
+          .descr(
+            "Deconstruct component props directly in the lambda parameters (`({ a, b }) => ...`) " +
+              "as opposed to using a single prop variable (`props => ...`)"
           ),
     })
     .withHelperSet({
@@ -51,12 +61,22 @@ export const createReactSdk = () => {
         }
         return `import React, { ${reactImports.join(", ")} } from "react";`;
       },
-      reactSymbol(symbolName, options) {
+      reactSymbol(symbolName: string, options) {
         return options.data.root.importReactSymbols ? symbolName : `React.${symbolName}`;
+      },
+      propsArguments() {
+        const options = [...arguments][arguments.length - 1];
+        const props = [...arguments].slice(0, arguments.length - 2);
+        return options.data.root.deconstructProps ? `({ ${props.join(", ")} })` : "props";
+      },
+      prop(name: string, options) {
+        return options.data.root.deconstructProps ? name : `props.${name}`;
       },
     })
     .withPartialSet({
-      propsContents: "{{#if dummyProp}}dummy: string{{/if}}",
+      propsContents:
+        "{{#if dummyProp}}dummy: string\n{{/if}}" +
+        '{{#if propsWithChildren}}children: {{ reactSymbol "ReactNode" }}\n{{/if}}',
       propsType: noindent(`
         {{#ifEquals propsType "interface"}}
         {{#if exportPropsType}}export {{/if}}interface {{ pascalCase componentName }}{{ propsTypeSuffix }} {

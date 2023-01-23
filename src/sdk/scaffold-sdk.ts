@@ -221,7 +221,15 @@ export class ScaffoldSdk<T extends RuntimeData> {
         return template;
       }
     }
-    return this.handlebars.compile(template)(this.getData());
+    try {
+      return this.handlebars.compile(template)(this.getData());
+    } catch (e) {
+      console.error("Failed to fill handlebar template. See messages below for more details:");
+      console.log("Occured error:", e);
+      console.log("Data context available to template: ", this.getData());
+      console.log("Template: ", template);
+      throw new Error("Cannot fill handlebar template.");
+    }
   }
 
   async writeToTarget(relativePath: string, contents: string) {

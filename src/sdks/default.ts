@@ -2,6 +2,9 @@ import { ImportDeclarationStructure, OptionalKind } from "ts-morph";
 import * as changeCase from "change-case";
 import { createEmptySdk } from "./empty";
 
+const caseWrapper = (handler: (v: string) => string) => (original: string) =>
+  original ? handler(original) : "NOT_FOUND";
+
 export const createDefaultSdk = () => {
   const sdk = createEmptySdk();
   return sdk
@@ -73,17 +76,17 @@ export const createDefaultSdk = () => {
       },
     })
     .withHelperSet({
-      camelCase: changeCase.camelCase,
-      capitalCase: changeCase.capitalCase,
-      constantCase: changeCase.constantCase,
-      dotCase: changeCase.dotCase,
-      headerCase: changeCase.headerCase,
-      noCase: changeCase.noCase,
-      paramCase: changeCase.paramCase,
-      pascalCase: changeCase.pascalCase,
-      pathCase: changeCase.pathCase,
-      sentenceCase: changeCase.sentenceCase,
-      snakeCase: changeCase.snakeCase,
+      camelCase: caseWrapper(changeCase.camelCase),
+      capitalCase: caseWrapper(changeCase.capitalCase),
+      constantCase: caseWrapper(changeCase.constantCase),
+      dotCase: caseWrapper(changeCase.dotCase),
+      headerCase: caseWrapper(changeCase.headerCase),
+      noCase: caseWrapper(changeCase.noCase),
+      paramCase: caseWrapper(changeCase.paramCase),
+      pascalCase: caseWrapper(changeCase.pascalCase),
+      pathCase: caseWrapper(changeCase.pathCase),
+      sentenceCase: caseWrapper(changeCase.sentenceCase),
+      snakeCase: caseWrapper(changeCase.snakeCase),
       curly(options) {
         return new sdk.hb.SafeString(`{${options.fn(this)}}`).toString();
       },
