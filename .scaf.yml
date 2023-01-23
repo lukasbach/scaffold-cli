@@ -2,7 +2,6 @@ repositories:
   - ./templates/react
   - ./templates/core
 templates:
-  example: ./templates/react/example-template
   customFc:
     source: ./templates/react/react-fc
     defaults:

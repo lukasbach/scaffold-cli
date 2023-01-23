@@ -1,13 +1,19 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import simpleGit from "simple-git";
-import { fileNames, getAllParentPaths, isNotNullish, promisePool, readYaml } from "../util";
+import { fileNames, getAllParentPaths, isNotNullish, readYaml } from "../util";
 import { TemplateRootData, TemplateUsageDeclaration } from "../types";
 
 export class TemplateScope {
-  private loadedTemplates: Record<string, TemplateUsageDeclaration> = {};
+  private loadedTemplates: Record<string, TemplateUsageDeclaration & { repoPath?: string }> = {};
 
-  private repos: { localPath: string; isRemote: boolean }[] = [];
+  private repos: {
+    localPath: string;
+    isRemote: boolean;
+    name?: string;
+    description?: string;
+    author?: string;
+  }[] = [];
 
   constructor(private cwd: string) {}
 
@@ -98,7 +104,11 @@ export class TemplateScope {
     const relativePath = path.join(path.dirname(templateRoot.path), repoPath);
 
     if (fs.existsSync(relativePath)) {
-      this.repos.push({ localPath: relativePath, isRemote: false });
+      this.repos.push({
+        localPath: relativePath,
+        isRemote: false,
+        ...(await this.loadRepoMetadata(relativePath)),
+      });
       return relativePath;
     }
 
@@ -106,7 +116,7 @@ export class TemplateScope {
     const gitFolderParent = path.join(fileNames.localReposDir, "repos");
     const gitFolder = path.join(gitFolderParent, `${owner}-${repo}`);
     const localPath = path.join(gitFolder, ...folderPieces);
-    this.repos.push({ localPath, isRemote: true });
+    this.repos.push({ localPath, isRemote: true, ...(await this.loadRepoMetadata(localPath)) });
 
     if (fs.existsSync(localPath)) {
       return localPath;
@@ -145,8 +155,21 @@ export class TemplateScope {
         .map(async ([key, source]) => {
           this.loadedTemplates[path.basename(key, path.extname(key))] = {
             source: await this.resolveTemplateSourceFilePath(source),
+            repoPath: path.join(this.cwd, repoPath),
           };
         })
     );
+  }
+
+  private async loadRepoMetadata(localPath: string) {
+    const metaFile = path.join(localPath, "scaffold-templates.yml");
+    if (fs.existsSync(metaFile)) {
+      return yaml.parse(await fs.readFile(metaFile, { encoding: "utf-8" })) as {
+        name?: string;
+        description?: string;
+        author?: string;
+      };
+    }
+    return {};
   }
 }

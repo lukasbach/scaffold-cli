@@ -61,6 +61,8 @@ export class Introspection {
 
   private hb: typeof Handlebars;
 
+  private parameterOverwrite: Record<string, any> = {};
+
   constructor() {
     this.hb = handlebars.create();
     this.hb.registerPartial("optionDetails", "{{#if shortKey}}-{{shortKey}},{{/if}}--{{key}}");
@@ -82,6 +84,22 @@ export class Introspection {
 
   endIntrospection() {
     this.isActive = false;
+  }
+
+  setParameterOverwrite(parameterKey: string, value: any) {
+    this.parameterOverwrite[parameterKey] = value;
+  }
+
+  resetParameterOverwrite() {
+    this.parameterOverwrite = {};
+  }
+
+  getParameterOverwrite(parameterKey: string) {
+    return this.parameterOverwrite[parameterKey];
+  }
+
+  getRegisteredParameters() {
+    return this.parameters.map(p => p.getConfig());
   }
 
   registerOutput(path: string, content: string) {
