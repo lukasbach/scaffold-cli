@@ -80,6 +80,9 @@ export class Introspection {
 
   startIntrospection() {
     this.isActive = true;
+    this.output = {};
+    this.actionCalls.clear();
+    this.parameters = [];
   }
 
   endIntrospection() {
@@ -143,5 +146,9 @@ export class Introspection {
       })),
       actions: [...this.actionCalls],
     };
+  }
+
+  public getRegisteredOutputs() {
+    return this.output;
   }
 }

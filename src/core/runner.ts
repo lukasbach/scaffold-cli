@@ -39,6 +39,7 @@ export class Runner {
   }
 
   async introspectTemplate(template: TemplateUsageDeclaration) {
+    this.changedFiles.clear();
     const outfile = await this.buildTemplate(template);
     scaffold.introspection.startIntrospection();
     await (await import(`file://${outfile}`)).default.default();

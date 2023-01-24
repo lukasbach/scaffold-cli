@@ -66,6 +66,7 @@
     "simple-git": "^3.16.0",
     "ts-deepmerge": "^5.0.0",
     "ts-morph": "^17.0.1",
+    "write-yaml": "^1.0.0",
     "yaml": "^2.2.1",
     "yargs": "^17.6.2"
   },

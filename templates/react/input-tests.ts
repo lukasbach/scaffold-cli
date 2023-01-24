@@ -12,5 +12,4 @@ export default async () => {
   await sdk.param.boolean("boolean").descr("boolean Value").default(true).required();
   await sdk.param.confirm("confirm").descr("confirm Value").default(true).required();
   await sdk.param.editor("editor").descr("editor Value").default("Default Value").required();
-  console.log(sdk.getData());
 };

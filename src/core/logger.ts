@@ -11,4 +11,8 @@ export class Logger {
   output(...values: any[]) {
     console.log(...values);
   }
+
+  error(...values: any[]) {
+    console.error(...values);
+  }
 }
