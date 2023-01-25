@@ -77,7 +77,9 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   private async evaluate(): Promise<ParamTypeMap[T] | undefined> {
     if (scaffold.introspection.isIntrospectionRun) {
       this.sdk.setDataProperty(this.key, this.defaultValue);
-      return scaffold.introspection.getParameterOverwrite(this.key) ?? this.defaultValue;
+      const value = scaffold.introspection.getParameterOverwrite(this.key) ?? this.defaultValue;
+      this.sdk.setDataProperty(this.key, value);
+      return value;
     }
 
     const value = await scaffold.paramEvaluator.evaluate(
