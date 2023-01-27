@@ -45,16 +45,17 @@ const markdownTemplate = noindent(`
   \`\`\`
   `);
 
-const title = (text: string) => `━━ ${text} ${"━".repeat(40 - 4 - text.length)}`;
+const title = (text: string) => `━━ ${text} ${"━".repeat(100 - 4 - text.length)}`;
 
 const parameterManpageTemplate =
   // "  {{ key }}{{#if optional}}?{{/if}}   - " +
   "  " +
   "{{#if isArgument}}[{{{ key }}}]{{/if}}" +
   "{{#unless isArgument}}{{>optionDetails}}{{/unless}}" +
-  "{{manpageParamSpaces key}}{{#if description}}{{{ description }}}{{/if}}" +
+  "{{manpageParamSpaces key}}{{#manpageParamDescr key}}" +
+  "{{#if description}}{{{ description }}}{{/if}}" +
   "{{#if choices}}. Choices: {{#each choicesText}}{{#if @index}}, {{/if}}`{{{this}}}`{{/each}}{{/if}}" +
-  '{{#if default}}, Default: "{{{default}}}"{{/if}}\n  \n  ';
+  '{{#if default}}, Default: "{{{default}}}"{{/if}}{{/manpageParamDescr}}\n  \n  ';
 
 const manpageTemplate = noindent(`
   {{{ templateName }}}
@@ -74,6 +75,25 @@ const manpageTemplate = noindent(`
     --document-template   - Create a markdown documentation for the template
     --all   - Ask for all parameter values not provided as arguments, even those not required
   `);
+
+const countParameterDefinition = (parameterKey: string, options: any) => {
+  const param: ReturnType<typeof ParameterInitializer.prototype.getConfig> = options.data.root.parameters.find(
+    p => p.key === parameterKey
+  );
+  if (!param) {
+    return 2;
+  }
+  let i = 0;
+  if (param.isArgument) {
+    i += 2 + param.key.length;
+  } else {
+    i += 2 + param.key.length + (param.type !== "boolean" ? 2 : 0);
+  }
+  if (param.shortKey) {
+    i += 1 + param.shortKey.length + 1;
+  }
+  return i;
+};
 
 export class Introspection {
   private isActive = false;
@@ -100,23 +120,13 @@ export class Introspection {
       }
       return arg1 !== arg2 ? options.fn(this) : options.inverse(this);
     });
-    this.hb.registerHelper("manpageParamSpaces", (parameterKey, options) => {
-      const param: ReturnType<typeof ParameterInitializer.prototype.getConfig> = options.data.root.parameters.find(
-        p => p.key === parameterKey
-      );
-      if (!param) {
-        return "  ";
-      }
-      let i = 0;
-      if (param.isArgument) {
-        i += 2 + param.key.length;
-      } else {
-        i += 2 + param.key.length + (param.type !== "boolean" ? 2 : 0);
-      }
-      if (param.shortKey) {
-        i += 1 + param.shortKey.length + 1;
-      }
-      return " ".repeat(30 - i);
+    this.hb.registerHelper("manpageParamSpaces", (parameterKey, options) =>
+      " ".repeat(30 - countParameterDefinition(parameterKey, options))
+    );
+    this.hb.registerHelper("manpageParamDescr", function manageParamDescr(parameterKey, options) {
+      const lines: string[] = options.fn(this).match(/.{1,60}\S*/g);
+      return [lines[0], ...lines.slice(1).map(l => `${" ".repeat(1 + 30)}${l}`)].join("\n");
+      return options.fn(this);
     });
     this.hb.registerPartial(
       "optionDetails",
