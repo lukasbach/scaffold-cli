@@ -2,24 +2,23 @@ import noindent from "noindent";
 import * as handlebars from "handlebars";
 import path from "path";
 import fs from "fs-extra";
-import * as Handlebars from "handlebars";
 import { ParameterInitializer } from "../sdk";
 import { scaffold } from "../scaffold";
 
 const markdownTemplate = noindent(`
-  ## Template {{ templateName }}
+  ## Template {{{ templateName }}}
   
   > \`{{>invokeCommand}}\`
   
-  {{ templateDescription }}
+  {{{ templateDescription }}}
   
   ### Parameters
   
   {{#each parameters}}
-  * \`{{ key }}{{#if optional}}?{{/if}}\`{{#if description}}: _{{ description }}_{{/if}}
+  * \`{{{ key }}}{{#if optional}}?{{/if}}\`{{#if description}}: _{{{ description }}}_{{/if}}
     * Usage: {{#if isArgument}}argument{{/if}}{{#unless isArgument}}\`{{>optionDetails}}\`{{/unless}}{{#if choices}}
-    * Choices: {{#each choicesText}}{{#if @index}}, {{/if}}\`{{this}}\`{{/each}}{{/if}}{{#if default}}
-    * Default: \`{{default}}\`{{/if}}
+    * Choices: {{#each choicesText}}{{#if @index}}, {{/if}}\`{{{this}}}\`{{/each}}{{/if}}{{#if default}}
+    * Default: \`{{{default}}}\`{{/if}}
   {{/each}}
   
   ### Outputs
@@ -29,7 +28,7 @@ const markdownTemplate = noindent(`
   
   {{#each output}}
   <details>
-    <summary>{{filename}}</summary>
+    <summary>{{{filename}}</summary>
     
   \`\`\`
   {{{content}}}
@@ -42,8 +41,38 @@ const markdownTemplate = noindent(`
   When run in default settings, the following actions are used:
   
   \`\`\`
-  {{#each actions}}{{#if @index}}, {{/if}}{{this}}{{/each}}
+  {{#each actions}}{{#if @index}}, {{/if}}{{{this}}}{{/each}}
   \`\`\`
+  `);
+
+const title = (text: string) => `━━ ${text} ${"━".repeat(40 - 4 - text.length)}`;
+
+const parameterManpageTemplate =
+  // "  {{ key }}{{#if optional}}?{{/if}}   - " +
+  "  " +
+  "{{#if isArgument}}[{{{ key }}}]{{/if}}" +
+  "{{#unless isArgument}}{{>optionDetails}}{{/unless}}" +
+  "{{manpageParamSpaces key}}{{#if description}}{{{ description }}}{{/if}}" +
+  "{{#if choices}}. Choices: {{#each choicesText}}{{#if @index}}, {{/if}}`{{{this}}}`{{/each}}{{/if}}" +
+  '{{#if default}}, Default: "{{{default}}}"{{/if}}\n  \n  ';
+
+const manpageTemplate = noindent(`
+  {{{ templateName }}}
+  
+  {{{ templateDescription }}}
+  
+  ${title("Usage")}
+  $ {{>invokeCommand}}
+  
+  ${title("Options")}
+  
+  {{#each parameters}}${parameterManpageTemplate}{{/each}}
+  
+  ${title("Scaffold Options")}
+  
+    -h,--help   - Display details on the template, i.e. this page
+    --document-template   - Create a markdown documentation for the template
+    --all   - Ask for all parameter values not provided as arguments, even those not required
   `);
 
 export class Introspection {
@@ -65,7 +94,34 @@ export class Introspection {
 
   constructor() {
     this.hb = handlebars.create();
-    this.hb.registerPartial("optionDetails", "{{#if shortKey}}-{{shortKey}},{{/if}}--{{key}}");
+    this.hb.registerHelper("unlessEquals", function unlessEquals(arg1, arg2, options) {
+      if (arguments.length !== 3) {
+        throw new Error("#unlessEquals requires exactly 2 arguments");
+      }
+      return arg1 !== arg2 ? options.fn(this) : options.inverse(this);
+    });
+    this.hb.registerHelper("manpageParamSpaces", (parameterKey, options) => {
+      const param: ReturnType<typeof ParameterInitializer.prototype.getConfig> = options.data.root.parameters.find(
+        p => p.key === parameterKey
+      );
+      if (!param) {
+        return "  ";
+      }
+      let i = 0;
+      if (param.isArgument) {
+        i += 2 + param.key.length;
+      } else {
+        i += 2 + param.key.length + (param.type !== "boolean" ? 2 : 0);
+      }
+      if (param.shortKey) {
+        i += 1 + param.shortKey.length + 1;
+      }
+      return " ".repeat(30 - i);
+    });
+    this.hb.registerPartial(
+      "optionDetails",
+      '{{#if shortKey}}-{{shortKey}},{{/if}}--{{key}}{{#unlessEquals type "boolean"}}=#{{/unlessEquals}}'
+    );
     this.hb.registerPartial(
       "invokeCommand",
       "scaf {{templateKey}} " +
@@ -120,6 +176,10 @@ export class Introspection {
   async documentTemplate(targetFile: string) {
     const markdown = this.hb.compile(markdownTemplate)(this.getIntrospectionData());
     await fs.writeFile(path.join(process.cwd(), targetFile), markdown);
+  }
+
+  getManpage() {
+    return this.hb.compile(manpageTemplate)(this.getIntrospectionData());
   }
 
   setTemplateName(name: string) {

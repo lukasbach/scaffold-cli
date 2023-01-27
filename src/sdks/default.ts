@@ -26,6 +26,7 @@ export const createDefaultSdk = () => {
       filenameParameters: async (symbolName: string, extensions: string[]) => {
         const filenameCase = await sdk.param
           .list("filenameCase")
+          .descr("Casing of the filename, e.g. camelCase or snake_case")
           .default("paramCase")
           .choices([
             { value: "camelCase", name: "camelCase.ext" },
@@ -33,7 +34,11 @@ export const createDefaultSdk = () => {
             { value: "snakeCase", name: "snake_case.ext" },
             { value: "paramCase", name: "param-case.ext" },
           ]);
-        const fileExtension = await sdk.param.list("fileExtension").default("tsx").choices(extensions);
+        const fileExtension = await sdk.param
+          .list("fileExtension")
+          .descr("Extension of the file created")
+          .default("tsx")
+          .choices(extensions);
         return `${sdk.helper[filenameCase](symbolName)}.${fileExtension}`;
       },
       addFile: async (templateFile: string, target: string) => {

@@ -45,5 +45,12 @@ import { scaffold } from "./scaffold";
     process.exit(0);
   }
 
+  if (scaffold.args.getOption("help", "h")) {
+    await scaffold.runner.introspectTemplate(template);
+    const manpage = scaffold.introspection.getManpage();
+    console.log(manpage);
+    process.exit(0);
+  }
+
   await scaffold.runner.runTemplate(template, process.cwd());
 })();
