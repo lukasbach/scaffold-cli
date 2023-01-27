@@ -51,6 +51,15 @@ export default async () => {
         process.exit(1);
       }
 
+      if (!fs.existsSync(targetFile)) {
+        if (failOnChange) {
+          scaffold.logger.error(`Snapshot for ${templateKey} did not exist before`);
+          process.exit(1);
+        }
+        yaml.sync(tempFile, output);
+        continue;
+      }
+
       yaml.sync(tempFile, output);
       const newYaml = await fs.readFile(tempFile, { encoding: "utf8" });
       const oldYaml = await fs.readFile(targetFile, { encoding: "utf8" });
