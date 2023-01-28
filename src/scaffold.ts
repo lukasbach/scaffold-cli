@@ -1,8 +1,8 @@
 import { Logger, Runner, ParamEvaluator, TemplateScope } from "./core";
-import * as sdks from "./sdks";
 import { Introspection } from "./core/introspection";
 import { ArgumentParser } from "./core/argument-parser";
 import { SdkBuilder } from "./sdk/sdk-builder";
+import * as sdks from "./sdks";
 
 export const scaffold = {
   logger: new Logger(),
@@ -11,6 +11,5 @@ export const scaffold = {
   templateScope: new TemplateScope(process.cwd()),
   introspection: new Introspection(),
   args: new ArgumentParser(),
-  sdks,
-  build: new SdkBuilder(),
+  sdk: new SdkBuilder(sdks.createEmptySdk()),
 };

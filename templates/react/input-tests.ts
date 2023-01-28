@@ -1,7 +1,7 @@
 import "../../src/globals";
 
 export default async () => {
-  const sdk = scaffold.sdks.createDefaultSdk();
+  const sdk = scaffold.sdk.withDefaultCapabilities().build();
   const choices = ["a", "b", "c"];
   await sdk.param.string("string").descr("string Value").default("Default Value").required();
   await sdk.param.number("number").descr("number Value").default(43).required();

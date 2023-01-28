@@ -14,7 +14,7 @@ const snapTemplateConfig = async (template: TemplateUsageDeclaration) => {
 };
 
 export default async () => {
-  const sdk = scaffold.sdks.createEmptySdk();
+  const sdk = scaffold.sdk.build();
   sdk.setTemplateName("Create snapshot dumps for all scaffold templates in a template repository.");
   const repoName = await sdk.param
     .list("repoName")

@@ -8,7 +8,7 @@ const defaultContent = noindent(`
   `);
 
 export default async () => {
-  const sdk = scaffold.sdks.createEmptySdk();
+  const sdk = scaffold.sdk.build();
   sdk.setTemplateName("Edit global Scaffold Config file scoped to the local user");
   await sdk.do(async () => {
     const file = path.join(os.homedir(), ".scaf.yml");

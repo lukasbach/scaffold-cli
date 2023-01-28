@@ -21,10 +21,7 @@ const providerTemplate = noindent(`
 const withReactImport = (prefix: string, tpl: string) => `${prefix}{{{ reactImportStatement }}}\n\n${tpl}`;
 
 export default async () => {
-  const sdk = scaffold.sdks
-    .createDefaultSdk()
-    .mergeWith(scaffold.sdks.createReactSdk())
-    .mergeWith(scaffold.sdks.createJavascriptSdk());
+  const sdk = scaffold.sdk.withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
   sdk.setTemplateName("React Context");
   sdk.setTemplateDescription("Description Text");
 
