@@ -7,7 +7,7 @@ export default async () => {
   const sdk = scaffold.sdk().build();
   sdk.setTemplateName("List available templates");
   await sdk.do(async () => {
-    const templates = Object.entries(scaffold.templateScope.getTemplates()).filter(([_, template]) =>
+    const templates = Object.entries(scaffold.templateScope.getTemplates()).filter(([, template]) =>
       reposToDocument.includes(template.repoMetaData?.key ?? "")
     );
 

@@ -1,0 +1,96 @@
+default:
+  my-component.tsx: |-
+    import React from 'react';
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+    export const MyComponent: React.FC<MyComponentProps> = ({  }) => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };
+dummyProp=true:
+  my-component.tsx: |-
+    import React from 'react';
+
+    export type MyComponentProps = {
+      dummy: string
+      children: React.ReactNode
+
+    }
+
+    export const MyComponent: React.FC<MyComponentProps> = ({  }) => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };
+exportPropsType=false:
+  my-component.tsx: |-
+    import React from 'react';
+
+    type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+    export const MyComponent: React.FC<MyComponentProps> = ({  }) => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };
+importReactSymbols=true:
+  my-component.tsx: |-
+    import React, { FC, ReactNode } from "react";
+
+    export type MyComponentProps = {
+      children: ReactNode
+
+    }
+
+    export const MyComponent: FC<MyComponentProps> = ({  }) => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };
+propsWithChildren=false:
+  my-component.tsx: |-
+    import React from 'react';
+
+    export type MyComponentProps = {
+
+    }
+
+    export const MyComponent: React.FC<MyComponentProps> = ({  }) => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };
+deconstructProps=false:
+  my-component.tsx: |-
+    import React from 'react';
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+    export const MyComponent: React.FC<MyComponentProps> = props => {
+      return (
+        <>
+          hello
+        </>
+      );
+    };

@@ -66,7 +66,7 @@ export const createReactSdk = () => {
       },
       propsArguments() {
         const options = [...arguments][arguments.length - 1];
-        const props = [...arguments].slice(0, arguments.length - 2);
+        const props = [...arguments].slice(0, arguments.length - 1);
         return options.data.root.deconstructProps ? `({ ${props.join(", ")} })` : "props";
       },
       prop(name: string, options) {

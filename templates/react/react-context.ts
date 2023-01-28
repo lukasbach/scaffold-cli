@@ -9,10 +9,10 @@ const hookTemplate =
   'export const use{{ pascalCase ctxName }} = () => {{ reactSymbol "useContext" }}({{ contextVariable }});';
 
 const providerTemplate = noindent(`
-  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }} = {{ propsArguments "children" }} => {
+  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }}<{ children: {{ reactSymbol "ReactNode" }} }> = {{ propsArguments "children" }} => {
     return (
       <{{ contextVariable }}.Provider value={null as any}>
-        {{ prop "children" }}
+        { {{ prop "children" }} }
       </{{ contextVariable }}.Provider>
     );
   }
@@ -87,6 +87,12 @@ export default async () => {
           .default("{{ paramCase ctxName }}.context.{{ fileExtension }}")
           .descr("The name of the file that contains the context value. May be a template string.");
 
+  const typeFile = sdk.fillTemplate(placeTypeInDedicatedFile ? typeFileTemplate : ctxFileTemplate);
+  const typeFileImportModule = path.basename(typeFile, path.extname(typeFile));
+
+  const ctxFile = sdk.fillTemplate(ctxFileTemplate);
+  const ctxFileImportModule = path.basename(ctxFile, path.extname(typeFile));
+
   // TODO what for? sdk.setDataProperty("propsName", ctxName);
   // sdk.withPartial("contextVariable", "{{ pascalCase ctxName }}{{ pascalCase contextVariableSuffix }}");
   sdk.withHelper("contextVariable", () =>
@@ -105,7 +111,6 @@ export default async () => {
   await sdk.param.propsType().descr("Should the type for the context props be declared as type, interface, or inline?");
 
   if (placeTypeInDedicatedFile) {
-    sdk.setDataProperty("reactImports", ["ReactNode"]);
     await sdk.actions.addInlineTemplate(typeFileTemplate, withReactImport("", typeTemplate));
   }
 
@@ -113,15 +118,15 @@ export default async () => {
     sdk.setDataProperty("reactImports", ["useContext"]);
     await sdk.actions.addInlineTemplate(
       hookFileTemplate,
-      withReactImport("{{ namedImport ( contextVariable) }}\n", hookTemplate)
+      withReactImport(`{{{ namedImport "${ctxFileImportModule}" (contextVariable) }}}\n`, hookTemplate)
     );
   }
 
   if (placeProviderInDedicatedFile) {
-    sdk.setDataProperty("reactImports", ["FC"].filter(isNotNullish));
+    sdk.setDataProperty("reactImports", ["FC", "ReactNode"]);
     await sdk.actions.addInlineTemplate(
       providerFileTemplate,
-      withReactImport("{{ namedImport ( contextVariable) }}\n", providerTemplate) // TODO
+      withReactImport(`{{{ namedImport "${ctxFileImportModule}" (contextVariable) }}}\n`, providerTemplate)
     );
   }
 
@@ -131,11 +136,13 @@ export default async () => {
       !placeTypeInDedicatedFile ? "ReactNode" : null,
       !placeHookInDedicatedFile ? "useContext" : null,
       !placeProviderInDedicatedFile ? "FC" : null,
+      !placeProviderInDedicatedFile ? "ReactNode" : null,
+      "createContext",
     ].filter(isNotNullish)
   );
 
   const combinedValueTemplate = [
-    !placeTypeInDedicatedFile ? typeTemplate : null,
+    !placeTypeInDedicatedFile ? typeTemplate : `import { {{> propsName}} } from '${typeFileImportModule}';`,
     contextValueTemplate,
     !placeHookInDedicatedFile ? hookTemplate : null,
     !placeProviderInDedicatedFile ? providerTemplate : null,

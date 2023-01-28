@@ -1,0 +1,198 @@
+default:
+  hello-world.tsx: >-
+    import React from 'react';
+
+
+    export type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+placeTypeInDedicatedFile=true:
+  hello-world.type.tsx: |
+    import React from 'react';
+
+    export type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+  hello-world.context.tsx: >-
+    import React from 'react';
+
+
+    import { HelloWorldContextType } from 'hello-world.type';
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+placeHookInDedicatedFile=true:
+  hello-world.hook.tsx: |-
+    import { HelloWorldContext } from "hello-world.context";
+    import React from 'react';
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+  hello-world.context.tsx: >-
+    import React from 'react';
+
+
+    export type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+placeProviderInDedicatedFile=true:
+  hello-world.provider.tsx: >-
+    import { HelloWorldContext } from "hello-world.context";
+
+    import React from 'react';
+
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+  hello-world.context.tsx: >-
+    import React from 'react';
+
+
+    export type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+exportPropsType=false:
+  hello-world.tsx: >-
+    import React from 'react';
+
+
+    type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+dummyProp=true:
+  hello-world.tsx: >-
+    import React from 'react';
+
+
+    export type HelloWorldContextType = {
+      dummy: string
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    ({ children }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+importReactSymbols=true:
+  hello-world.tsx: >-
+    import React, { ReactNode, useContext, FC, ReactNode, createContext } from
+    "react";
+
+
+    export type HelloWorldContextType = {
+      children: ReactNode
+
+    }
+
+    export const HelloWorldContext = createContext<HelloWorldContextType>(null
+    as any); // FIXME
+
+    export const useHelloWorld = () => useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: FC<{ children: ReactNode }> = ({ children
+    }) => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { children }
+        </HelloWorldContext.Provider>
+      );
+    }
+deconstructProps=false:
+  hello-world.tsx: >-
+    import React from 'react';
+
+
+    export type HelloWorldContextType = {
+      children: React.ReactNode
+
+    }
+
+    export const HelloWorldContext =
+    React.createContext<HelloWorldContextType>(null as any); // FIXME
+
+    export const useHelloWorld = () => React.useContext(HelloWorldContext);
+
+    export const HelloWorldProvider: React.FC<{ children: React.ReactNode }> =
+    props => {
+      return (
+        <HelloWorldContext.Provider value={null as any}>
+          { props.children }
+        </HelloWorldContext.Provider>
+      );
+    }

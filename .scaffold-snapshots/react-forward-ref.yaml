@@ -1,0 +1,198 @@
+default:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+includeUseRef=false:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={ref}>
+          hello
+        </div>
+      );
+    };
+includeUseImperativeHandle=false:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+dummyProp=true:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+      dummy: string
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+exportPropsType=false:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+importReactSymbols=true:
+  my-component.tsx: >-
+    import React, { forwardRef, ReactNode, useRef, useImperativeHandle } from
+    "react";
+
+
+    export type MyComponentProps = {
+      children: ReactNode
+
+    }
+
+
+    export const MyComponent = forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = useRef<HTMLDivElement>(null);
+      useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+propsWithChildren=false:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((({  }), ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
+deconstructProps=false:
+  my-component.tsx: >-
+    import React from 'react';
+
+
+    export type MyComponentProps = {
+      children: React.ReactNode
+
+    }
+
+
+    export const MyComponent = React.forwardRef<HTMLDivElement | null,
+    MyComponentProps>((props, ref) => {
+      const elementRef = React.useRef<HTMLDivElement>(null);
+      React.useImperativeHandle<HTMLDivElement | null, {}>(
+        ref,
+        () => ({}),
+        []
+      );
+      return (
+        <div ref={elementRef}>
+          hello
+        </div>
+      );
+    };
