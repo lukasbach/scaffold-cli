@@ -4,6 +4,7 @@ import * as path from "path";
 
 import { fileNames } from "./util";
 import { scaffold } from "./scaffold";
+import { ParamEvaluator } from "./core";
 
 (async () => {
   global.scaffold = scaffold;
@@ -53,4 +54,11 @@ import { scaffold } from "./scaffold";
   }
 
   await scaffold.runner.runTemplate(template, process.cwd());
+
+  if (ParamEvaluator.defaultEvaluations > 0) {
+    scaffold.logger.log(
+      `${ParamEvaluator.defaultEvaluations} parameters where not specified and fell back to default values. ` +
+        `Run "scaf ${templateName} --help" for details on all parameters.`
+    );
+  }
 })();

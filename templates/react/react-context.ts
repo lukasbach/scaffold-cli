@@ -9,10 +9,10 @@ const hookTemplate =
   'export const use{{ pascalCase ctxName }} = () => {{ reactSymbol "useContext" }}({{ contextVariable }});';
 
 const providerTemplate = noindent(`
-  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }} = {{ propsArguments children }} => {
+  export const {{ pascalCase ctxName }}Provider: {{ reactSymbol "FC" }} = {{ propsArguments "children" }} => {
     return (
       <{{ contextVariable }}.Provider value={null as any}>
-        {{ prop children }}
+        {{ prop "children" }}
       </{{ contextVariable }}.Provider>
     );
   }

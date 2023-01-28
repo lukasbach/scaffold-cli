@@ -8,6 +8,7 @@ export type TemplateRepoYaml = {
 export type TemplateRootYaml = {
   repositories: string[];
   templates: Record<string, string | TemplateUsageDeclaration>;
+  isInternal?: boolean;
 };
 
 export type ParamConfig<T extends ParamType, O extends boolean = boolean> = {
@@ -16,8 +17,9 @@ export type ParamConfig<T extends ParamType, O extends boolean = boolean> = {
   type: T;
   optional?: O;
   default?: ParamTypeMap[T];
-  hint?: string;
   choices?: DistinctChoice[];
+  isArgument?: boolean;
+  shortKey?: string;
 };
 
 export type ParamType = keyof ParamTypeMap;
@@ -40,3 +42,10 @@ export type TemplateUsageDeclaration = {
 };
 
 export type TemplateRootData = TemplateRootYaml & { path: string };
+
+export type RepoMetaData = {
+  name?: string;
+  description?: string;
+  author?: string;
+  internal?: boolean;
+};

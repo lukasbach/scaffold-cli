@@ -2,18 +2,18 @@ import * as fs from "fs-extra";
 import * as path from "path";
 import simpleGit from "simple-git";
 import { fileNames, getAllParentPaths, isNotNullish, readYaml } from "../util";
-import { TemplateRootData, TemplateUsageDeclaration } from "../types";
+import { RepoMetaData, TemplateRootData, TemplateUsageDeclaration } from "../types";
 
 export class TemplateScope {
-  private loadedTemplates: Record<string, TemplateUsageDeclaration & { repoPath?: string }> = {};
+  private loadedTemplates: Record<
+    string,
+    TemplateUsageDeclaration & { repoPath?: string; repoMetaData?: RepoMetaData }
+  > = {};
 
-  private repos: {
+  private repos: ({
     localPath: string;
     isRemote: boolean;
-    name?: string;
-    description?: string;
-    author?: string;
-  }[] = [];
+  } & RepoMetaData)[] = [];
 
   constructor(private cwd: string) {}
 
@@ -156,6 +156,7 @@ export class TemplateScope {
           this.loadedTemplates[path.basename(key, path.extname(key))] = {
             source: await this.resolveTemplateSourceFilePath(source),
             repoPath: path.join(this.cwd, repoPath),
+            repoMetaData: await this.loadRepoMetadata(resolvedRepoPath),
           };
         })
     );
@@ -164,11 +165,7 @@ export class TemplateScope {
   private async loadRepoMetadata(localPath: string) {
     const metaFile = path.join(localPath, "scaffold-templates.yml");
     if (fs.existsSync(metaFile)) {
-      return yaml.parse(await fs.readFile(metaFile, { encoding: "utf-8" })) as {
-        name?: string;
-        description?: string;
-        author?: string;
-      };
+      return yaml.parse(await fs.readFile(metaFile, { encoding: "utf-8" })) as RepoMetaData;
     }
     return {};
   }

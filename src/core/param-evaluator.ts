@@ -18,6 +18,8 @@ export class ParamEvaluator {
     // "expand",
   ];
 
+  public static defaultEvaluations = 0;
+
   async evaluate<T extends keyof ParamTypeMap, O extends boolean = false>(
     param: ParamConfig<T, O>,
     cliValue?: string | true
@@ -62,6 +64,9 @@ export class ParamEvaluator {
 
       throw new Error(`Unknown parameter type ${param.type}`);
     })();
+    if (!value) {
+      ParamEvaluator.defaultEvaluations++;
+    }
     return value ?? param.default;
   }
 
@@ -77,9 +82,7 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: type as any,
-          name: param.key,
-          message: param.description,
-          default: param.default,
+          ...this.promptDefaults(param),
         })
       )[param.key] as string;
     }
@@ -95,9 +98,7 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: "number",
-          name: param.key,
-          message: param.description,
-          default: param.default,
+          ...this.promptDefaults(param),
         })
       )[param.key];
     }
@@ -113,9 +114,7 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: "confirm",
-          name: param.key,
-          message: param.description,
-          default: param.default,
+          ...this.promptDefaults(param),
         })
       )[param.key];
     }
@@ -132,9 +131,7 @@ export class ParamEvaluator {
         (
           await inquirer.prompt({
             type: "list",
-            name: param.key,
-            message: param.description,
-            default: param.default ? "Yes" : "No",
+            ...this.promptDefaults(param),
             choices: [
               { key: "true", value: "Yes" },
               { key: "false", value: "No" },
@@ -159,9 +156,7 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: type as any,
-          name: param.key,
-          message: param.description,
-          default: param.default,
+          ...this.promptDefaults(param),
           choices: param.choices,
         })
       )[param.key] as string;
@@ -182,10 +177,8 @@ export class ParamEvaluator {
       return (
         await inquirer.prompt({
           type: type as any,
-          name: param.key,
-          message: param.description,
-          default: param.default,
           choices: param.choices,
+          ...this.promptDefaults(param),
         })
       )[param.key] as string[];
     }
@@ -195,5 +188,14 @@ export class ParamEvaluator {
 
   private shouldAskParam(param: ParamConfig<any>) {
     return scaffold.args.askAllParams() || !param.optional;
+  }
+
+  private promptDefaults(param: ParamConfig<any>) {
+    return {
+      name: param.key,
+      message: param.description,
+      default: param.default,
+      // prefix: param.isArgument ? " (argument)" : ` --${param.key}${param.shortKey ? `,-${param.shortKey}` : ""}`,
+    };
   }
 }

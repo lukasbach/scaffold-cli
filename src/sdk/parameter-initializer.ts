@@ -89,8 +89,9 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
         description: this.description,
         optional: !this.isRequired,
         default: this.defaultValue,
-        hint: `Append --${this.key}=value to auto-fill this`,
         choices: this.possibleChoices,
+        isArgument: this.isArgument,
+        shortKey: this.shortKey,
       },
       this.getProvidedValue()
     );

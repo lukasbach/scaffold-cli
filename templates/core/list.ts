@@ -4,8 +4,17 @@ export default async () => {
   const sdk = scaffold.sdks.createEmptySdk();
   sdk.setTemplateName("List available templates");
   await sdk.do(async () => {
-    Object.entries(scaffold.templateScope.getTemplates()).forEach(([templateName, template]) => {
-      scaffold.logger.output(`- ${templateName}: ${template.source}`);
-    });
+    scaffold.logger.output("Available Templates");
+    Object.entries(scaffold.templateScope.getTemplates())
+      .filter(([_, t]) => !t.repoMetaData?.internal)
+      .forEach(([templateName]) => {
+        scaffold.logger.output(`  ${templateName}`);
+      });
+    scaffold.logger.output("\nScaffold Commands");
+    Object.entries(scaffold.templateScope.getTemplates())
+      .filter(([_, t]) => t.repoMetaData?.internal)
+      .forEach(([templateName]) => {
+        scaffold.logger.output(`  ${templateName}`);
+      });
   });
 };
