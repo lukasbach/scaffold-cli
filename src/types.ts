@@ -46,6 +46,7 @@ export type TemplateRootData = TemplateRootYaml & { path: string };
 
 export type RepoMetaData = {
   name?: string;
+  key?: string;
   description?: string;
   author?: string;
   internal?: boolean;

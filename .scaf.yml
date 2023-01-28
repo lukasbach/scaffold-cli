@@ -1,6 +1,7 @@
 repositories:
   - ./templates/react
   - ./templates/core
+  - ./templates/internal
 templates:
   customFc:
     source: ./templates/react/react-fc

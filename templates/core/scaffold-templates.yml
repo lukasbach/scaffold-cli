@@ -2,3 +2,4 @@ name: Scaffold Core Commands
 description: Core utility commands defined by scaffold-cli
 internal: true
 author: Lukas Bach
+key: core

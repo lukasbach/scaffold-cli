@@ -11,6 +11,7 @@ import { ParamEvaluator } from "./core";
   global.execa = await import("execa");
   global.git = await import("simple-git");
   global.fs = fs;
+  global.path = path;
   global.os = await import("os");
   global.yaml = await import("yaml");
   global.changeCase = await import("change-case");

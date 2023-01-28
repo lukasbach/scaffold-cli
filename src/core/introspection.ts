@@ -28,7 +28,7 @@ const markdownTemplate = noindent(`
   
   {{#each output}}
   <details>
-    <summary>{{{filename}}</summary>
+    <summary>{{{filename}}}</summary>
     
   \`\`\`
   {{{content}}}
@@ -185,11 +185,17 @@ export class Introspection {
 
   async documentTemplate(targetFile: string) {
     const markdown = this.hb.compile(markdownTemplate)(this.getIntrospectionData());
-    await fs.writeFile(path.join(process.cwd(), targetFile), markdown);
+    const target = path.join(process.cwd(), targetFile);
+    await fs.ensureDir(path.dirname(target));
+    await fs.writeFile(target, markdown);
   }
 
   getManpage() {
     return this.hb.compile(manpageTemplate)(this.getIntrospectionData());
+  }
+
+  getInvokeCommandSnippet(templateKey?: string) {
+    return this.hb.compile("{{>invokeCommand}}")({ ...this.getIntrospectionData(), templateKey });
   }
 
   setTemplateName(name: string) {
@@ -200,7 +206,7 @@ export class Introspection {
     this.templateDescription = descr;
   }
 
-  private getIntrospectionData() {
+  public getIntrospectionData() {
     const parameters = this.parameters.map(p => p.getConfig());
     return {
       templateKey: scaffold.args.getTemplateName(), // TODO rename to key
