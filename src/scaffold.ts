@@ -11,5 +11,5 @@ export const scaffold = {
   templateScope: new TemplateScope(process.cwd()),
   introspection: new Introspection(),
   args: new ArgumentParser(),
-  sdk: new SdkBuilder(sdks.createEmptySdk()),
+  sdk: () => new SdkBuilder(sdks.createEmptySdk()),
 };

@@ -23,7 +23,7 @@ const componentTemplate = noindent(`
   `);
 
 export default async () => {
-  const sdk = scaffold.sdk.withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
+  const sdk = scaffold.sdk().withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
   sdk.setTemplateName("React Component with forwarded ref");
   sdk.setTemplateDescription("Description Text");
   await sdk.param.string("elementType").default("div").descr("The HTML element type used for the forwarded ref");
