@@ -36,8 +36,15 @@ export default async () => {
         `\n\n  \`${scaffold.introspection.getInvokeCommandSnippet(templateName)}\`\n`;
     }
 
+    let readmeContent = "<!-- TEMPLATE_LIST -->\n";
     for (const [repoKey, summaryData] of Object.entries(summaryDataFiles)) {
       await fs.writeFile(path.join(`./template-docs/${repoKey}/index.md`), summaryData);
+      readmeContent += `##${summaryData}\n\n`;
     }
+    readmeContent += "<!-- /TEMPLATE_LIST -->";
+
+    const fullReadme = await fs.readFile("./readme.md", { encoding: "utf-8" });
+    const changedReadme = fullReadme.replace(/<!-- TEMPLATE_LIST -->[\w\W]+<!-- \/TEMPLATE_LIST -->/m, readmeContent);
+    await fs.writeFile("./readme.md", changedReadme);
   });
 };

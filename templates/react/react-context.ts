@@ -35,13 +35,11 @@ export default async () => {
   await sdk.param
     .string("propsTypeSuffix")
     .default("ContextType")
-    .descr('Suffix for the context type name. e.g. "type MyContextName*Suffix* = {..."')
-    .asArgument();
+    .descr('Suffix for the context type name. e.g. "type MyContextName*Suffix* = {..."');
   await sdk.param
     .string("contextVariableSuffix")
     .default("Context")
-    .descr('Suffix for the context instance variable name. e.g. "const MyContextName*Suffix* = createContext(..."')
-    .asArgument();
+    .descr('Suffix for the context instance variable name. e.g. "const MyContextName*Suffix* = createContext(..."');
 
   await sdk.param.list("fileExtension").default("tsx").choices(["tsx", "ts", "jsx", "js"]);
 

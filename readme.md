@@ -1,32 +1,7 @@
-# CLI Typescript Commander Starter
-<!-- TODO -->
-<!-- # {NAME} -->
+# Scaffold CLI
 
-> A template repository for CLI tools based on Typescript and CommanderJs.
+> A templating tool for building reusable and configurable code templates in a central place.
 
-<!--
-![Pretty](https://github.com/lukasbach/{NAME}/workflows/verify/badge.svg)
-![Testing](https://github.com/lukasbach/{NAME}/workflows/publish/badge.svg)
--->
-
- Features
-
-- Test setup with Jest
-- Eslint setup with airbnb defaults and prettier
-- Setup with Yarn
-- Builds for multiple targets cjs, esm and esnext
-- Github Actions CI Pipeline for testing and publishing
-
-## Setup template
-
-- Clone the template via the _Use this template_ button or by clicking
-  [here](https://github.com/lukasbach/ts-starter/generate).
-- Search for "TODO" in the project and adjust everything applicable, and replace "{NAME}" with your project name
-- (optionally) Add a secret to GitHub with the name `npm_token` to allow NPM releases
-- (optionally) enable packaging an exported CLI via `pkg` if enabled in the CI file
-- remove or adapt from the following sections to adjust to the package
-
----
 
 ## How to use
 
@@ -71,6 +46,49 @@ render(
   />
 )
 ```
+
+## Available Templates
+<!-- TEMPLATE_LIST -->
+### Core Templates
+
+The following templates are available in the template scope when adding the `lukasbach/scaffold-cli/core`
+template repository.
+- [__Edit global Scaffold Config file scoped to the local user__: Description Text](/template-docs/core/edit-config.md)
+
+  `scaf edit-config `
+- [__Initialize scaffold on a code repository__: Description Text](/template-docs/core/init.md)
+
+  `scaf init --addToReadme --defaultRepos=# `
+- [__List available templates__: Description Text](/template-docs/core/list.md)
+
+  `scaf list `
+- [__Create snapshot dumps for all scaffold templates in a template repository.__: Description Text](/template-docs/core/scaf-snap.md)
+
+  `scaf scaf-snap --repoName=# [--output=#] [--failOnChange] `
+- [__Update local template repositories__: Description Text](/template-docs/core/update.md)
+
+  `scaf update `
+
+
+### React Templates
+
+The following templates are available in the template scope when adding the `lukasbach/scaffold-cli/react`
+template repository.
+- [__List available templates__: undefined](/template-docs/react/input-tests.md)
+
+  `scaf input-tests --string=# --number=# --list=# --checkbox=# --password=# --boolean --confirm=# --editor=# `
+- [__React Context__: Description Text](/template-docs/react/react-context.md)
+
+  `scaf react-context <ctxName> [<propsTypeSuffix>] [<contextVariableSuffix>] [--fileExtension=#] [--placeTypeInDedicatedFile] [--placeHookInDedicatedFile] [--placeProviderInDedicatedFile] [--exportPropsType] [--dummyProp] [--importReactSymbols] [--deconstructProps] [--propsType=#] `
+- [__React FC__: Description Text](/template-docs/react/react-fc.md)
+
+  `scaf react-fc <componentName> [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
+- [__React Component with forwarded ref__: Description Text](/template-docs/react/react-forward-ref.md)
+
+  `scaf react-forward-ref <componentName> [--elementType=#] [--innerRef=#] [--includeUseRef] [--includeUseImperativeHandle] [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
+
+
+<!-- /TEMPLATE_LIST -->
 
 ## How to develop
 
