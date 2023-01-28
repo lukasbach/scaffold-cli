@@ -1,4 +1,5 @@
 import { DistinctChoice } from "inquirer";
+import { RuntimeData, ScaffoldSdk } from "./sdk";
 
 export type TemplateRepoYaml = {
   name?: string;
@@ -49,3 +50,13 @@ export type RepoMetaData = {
   author?: string;
   internal?: boolean;
 };
+
+export type MergedRuntimeData<T extends RuntimeData, O extends RuntimeData> = {
+  actions: T["actions"] & O["actions"];
+  conditions: T["conditions"] & O["conditions"];
+  helpers: T["helpers"] & O["helpers"];
+  partials: T["partials"] & O["partials"];
+  parameterTemplates: T["parameterTemplates"] & O["parameterTemplates"];
+};
+
+export type RuntimeDataOf<T> = T extends ScaffoldSdk<infer X> ? X : never;

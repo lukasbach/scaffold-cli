@@ -4,11 +4,13 @@ import { HelperDelegate, Template } from "handlebars";
 import { Project as TsProject } from "ts-morph";
 import { RuntimeData } from "./types";
 import { ParameterInitializer } from "./parameter-initializer";
-import { ParamType } from "../types";
+import { MergedRuntimeData, ParamType } from "../types";
 import { getAllParentPaths } from "../util";
 import { scaffold } from "../scaffold";
 
-export class ScaffoldSdk<T extends RuntimeData> {
+export class ScaffoldSdk<
+  T extends RuntimeData = { actions: {}; conditions: {}; data: {}; helpers: {}; partials: {}; parameterTemplates: {} }
+> {
   private runtimeData: RuntimeData = {
     actions: {},
     conditions: {},
@@ -174,15 +176,7 @@ export class ScaffoldSdk<T extends RuntimeData> {
     return this as any;
   }
 
-  mergeWith<O extends RuntimeData>(
-    otherSdk: ScaffoldSdk<O>
-  ): ScaffoldSdk<{
-    actions: T["actions"] & O["actions"];
-    conditions: T["conditions"] & O["conditions"];
-    helpers: T["helpers"] & O["helpers"];
-    partials: T["partials"] & O["partials"];
-    parameterTemplates: T["parameterTemplates"] & O["parameterTemplates"];
-  }> {
+  mergeWith<O extends RuntimeData>(otherSdk: ScaffoldSdk<O>): ScaffoldSdk<MergedRuntimeData<T, O>> {
     Object.entries(otherSdk.internalRuntimeData.actions).forEach(([key, value]) => this.withAction(key, value));
     Object.entries(otherSdk.internalRuntimeData.conditions).forEach(([key, value]) => this.withCondition(key, value));
     Object.entries(otherSdk.internalRuntimeData.helpers).forEach(([key, value]) => this.withHelper(key, value));
