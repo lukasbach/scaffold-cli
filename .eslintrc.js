@@ -40,7 +40,8 @@ module.exports = {
     "no-plusplus": "off",
     "class-methods-use-this": "off",
     "import/no-cycle": "off",
-    "prefer-rest-params": "off"
+    "prefer-rest-params": "off",
+    "no-bitwise": "off"
   },
   ignorePatterns: ["lib", "*.js"],
 };

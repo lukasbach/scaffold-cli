@@ -1,11 +1,6 @@
 import { DistinctChoice } from "inquirer";
 import { RuntimeData, ScaffoldSdk } from "./sdk";
 
-export type TemplateRepoYaml = {
-  name?: string;
-  author?: string;
-};
-
 export type TemplateRootYaml = {
   repositories: string[];
   templates: Record<string, string | TemplateUsageDeclaration>;

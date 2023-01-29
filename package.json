@@ -1,7 +1,7 @@
 {
   "name": "scaffold-cli",
   "version": "0.0.1",
-  "description": "TODO",
+  "description": "A templating tool for building reusable and configurable code templates in a central place.",
   "bin": {
     "scaffold": "lib/cjs/index.js"
   },
@@ -27,7 +27,8 @@
     "lint:test": "eslint .",
     "prepublishOnly": "yarn build",
     "clean": "rimraf ./lib/ ./exec/",
-    "docs": "typedoc --out docs src/index.ts --excludeInternal"
+    "docs": "typedoc --out docs src/index.ts --excludeInternal",
+    "postinstall": "scaf update"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",

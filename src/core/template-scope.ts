@@ -1,21 +1,33 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import simpleGit from "simple-git";
+import { ExecaChildProcess } from "execa";
 import { fileNames, getAllParentPaths, isNotNullish, readYaml } from "../util";
 import { RepoMetaData, TemplateRootData, TemplateUsageDeclaration } from "../types";
+
+type AllRepoData = {
+  localPath: string;
+  isRemote: boolean;
+  gitFolder?: string;
+} & RepoMetaData;
 
 export class TemplateScope {
   private loadedTemplates: Record<
     string,
-    TemplateUsageDeclaration & { repoPath?: string; repoMetaData?: RepoMetaData }
+    TemplateUsageDeclaration & { repoPath?: string; repoMetaData?: RepoMetaData; sourceKey: string }
   > = {};
 
-  private repos: ({
-    localPath: string;
-    isRemote: boolean;
-  } & RepoMetaData)[] = [];
+  private repos: AllRepoData[] = [];
+
+  private userTemplateRoot: TemplateRootData;
+
+  private nearestTemplateRoot: TemplateRootData;
 
   constructor(private cwd: string) {}
+
+  async ensureUserTemplateRoot() {
+    // TODO
+  }
 
   async initialize() {
     const potentialTemplateRoots = [...this.getAllParentPaths(), os.homedir()];
@@ -34,6 +46,10 @@ export class TemplateScope {
       )
     ).filter(isNotNullish);
 
+    this.userTemplateRoot = templateRoots[templateRoots.length - 1];
+    // eslint-disable-next-line prefer-destructuring
+    this.nearestTemplateRoot = templateRoots[0];
+
     for (const templateRoot of templateRoots) {
       for (const repo of templateRoot.repositories ?? []) {
         await this.initRepository(templateRoot, repo);
@@ -42,16 +58,26 @@ export class TemplateScope {
 
     for (const templateRoot of templateRoots) {
       for (const [key, templateData] of Object.entries(templateRoot.templates ?? {})) {
-        const source = path.join(
-          path.dirname(templateRoot.path),
-          typeof templateData === "string" ? templateData : templateData.source
-        );
+        const relativeSource = typeof templateData === "string" ? templateData : templateData.source;
+        if (!relativeSource) {
+          throw new Error(`Source string of template ${key} is invalid`);
+        }
+        const source = path.join(path.dirname(templateRoot.path), relativeSource);
         this.loadedTemplates[key] = {
           ...(typeof templateData === "string" ? {} : templateData),
+          sourceKey: relativeSource,
           source: await this.resolveTemplateSourceFilePath(source),
         };
       }
     }
+  }
+
+  getUserTemplateRoot() {
+    return this.userTemplateRoot;
+  }
+
+  getNearestTemplateRoot() {
+    return this.nearestTemplateRoot;
   }
 
   getTemplates() {
@@ -70,13 +96,17 @@ export class TemplateScope {
 
   private async installRepoDeps(gitFolder: string) {
     const topLevelFiles = await fs.readdir(gitFolder);
+    let cmd: ExecaChildProcess<string> | null = null;
     if (topLevelFiles.includes("yarn.lock")) {
       scaffold.logger.log(`Updating dependencies for ${gitFolder} with yarn...`);
-      $("yarn", { cwd: gitFolder });
+      cmd = $("yarn", { cwd: gitFolder });
     } else if (topLevelFiles.includes("package.json")) {
       scaffold.logger.log(`Updating dependencies for ${gitFolder} with npm install...`);
-      $("npm install", { cwd: gitFolder });
+      cmd = $("npm install", { cwd: gitFolder });
     }
+    cmd?.stdout?.pipe(process.stdout);
+    cmd?.stderr?.pipe(process.stderr);
+    await cmd;
   }
 
   private async resolveTemplateSourceFilePath(sourceString: string) {
@@ -116,7 +146,7 @@ export class TemplateScope {
     const gitFolderParent = path.join(fileNames.localReposDir, "repos");
     const gitFolder = path.join(gitFolderParent, `${owner}-${repo}`);
     const localPath = path.join(gitFolder, ...folderPieces);
-    this.repos.push({ localPath, isRemote: true, ...(await this.loadRepoMetadata(localPath)) });
+    this.repos.push({ localPath, isRemote: true, gitFolder, ...(await this.loadRepoMetadata(localPath)) });
 
     if (fs.existsSync(localPath)) {
       return localPath;
@@ -153,8 +183,10 @@ export class TemplateScope {
         .filter(file => file.isDirectory() || path.extname(file.name) === ".ts")
         .map(file => [file.name, path.join(resolvedRepoPath, file.name)])
         .map(async ([key, source]) => {
-          this.loadedTemplates[path.basename(key, path.extname(key))] = {
+          const cleanedKey = path.basename(key, path.extname(key));
+          this.loadedTemplates[cleanedKey] = {
             source: await this.resolveTemplateSourceFilePath(source),
+            sourceKey: [repoPath, cleanedKey].join("/"),
             repoPath: path.join(this.cwd, repoPath),
             repoMetaData: await this.loadRepoMetadata(resolvedRepoPath),
           };

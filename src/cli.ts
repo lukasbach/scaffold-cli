@@ -32,6 +32,7 @@ import { ParamEvaluator } from "./core";
     process.exit(0);
   }
 
+  await scaffold.templateScope.ensureUserTemplateRoot();
   await scaffold.templateScope.initialize();
 
   const templateName = scaffold.args.getTemplateName();

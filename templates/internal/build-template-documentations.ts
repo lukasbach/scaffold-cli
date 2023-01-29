@@ -11,19 +11,21 @@ export default async () => {
       reposToDocument.includes(template.repoMetaData?.key ?? "")
     );
 
-    const summaryDataFiles = reposToDocument.reduce<Record<string, string>>(
-      (obj, repoKey) => ({
+    const summaryDataFiles = reposToDocument.reduce<Record<string, string>>((obj, repoKey) => {
+      const descr =
+        repoKey === "core"
+          ? "The following templates are core commands which are available by default."
+          : `The following templates are available in the template scope when adding the \`lukasbach/scaffold-cli/${repoKey}\` template repository.`;
+      return {
         ...obj,
         [repoKey]: noindent(`
         # ${repoKey[0].toUpperCase() + repoKey.slice(1)} Templates
         
-        The following templates are available in the template scope when adding the \`lukasbach/scaffold-cli/${repoKey}\`
-        template repository.
+        ${descr}
         
         `),
-      }),
-      {}
-    );
+      };
+    }, {});
 
     for (const [templateName, template] of templates) {
       console.log(`Building ${templateName}...`);
