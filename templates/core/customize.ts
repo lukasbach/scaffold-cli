@@ -36,6 +36,7 @@ export default async () => {
       ? scaffold.templateScope.getUserTemplateRoot()
       : scaffold.templateScope.getNearestTemplateRoot();
     const templateConfig = yaml.parse(await fs.readFile(templateRoot.path, { encoding: "utf-8" }));
+    templateConfig.templates = templateConfig.templates || {};
     templateConfig.templates[template] = {
       source: templateData.sourceKey,
       defaults: defaultValues,

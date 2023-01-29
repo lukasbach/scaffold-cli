@@ -64,3 +64,6 @@ import { ParamEvaluator } from "./core";
     );
   }
 })();
+
+// TODO Error: Template C:\Users\lbach\lukasbach\scaffold-cli\templates\react\react-fc not found
+// TODO after yarn start customize react-fc --global
