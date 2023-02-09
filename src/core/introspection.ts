@@ -50,7 +50,7 @@ const title = (text: string) => `━━ ${text} ${"━".repeat(100 - 4 - text.le
 const parameterManpageTemplate =
   // "  {{ key }}{{#if optional}}?{{/if}}   - " +
   "  " +
-  "{{#if isArgument}}[{{{ key }}}]{{/if}}" +
+  "{{#if isArgument}}<{{{ key }}}>{{/if}}" +
   "{{#unless isArgument}}{{>optionDetails}}{{/unless}}" +
   "{{manpageParamSpaces key}}{{#manpageParamDescr key}}" +
   "{{#if description}}{{{ description }}}{{/if}}" +
@@ -67,13 +67,16 @@ const manpageTemplate = noindent(`
   
   ${title("Options")}
   
+  You can also use the --all parameter to interactively prompt all options.
+  
   {{#each parameters}}${parameterManpageTemplate}{{/each}}
   
   ${title("Scaffold Options")}
   
-    -h,--help   - Display details on the template, i.e. this page
-    --document-template   - Create a markdown documentation for the template
-    --all   - Ask for all parameter values not provided as arguments, even those not required
+    -h,--help               - Display details on the template, i.e. this page
+    --document-template     - Create a markdown documentation for the template
+    --all                   - Ask for all parameter values not provided as arguments, even those not required
+    --log-level=#           - Logging level. Choices: verbose, debug.
   `);
 
 const countParameterDefinition = (parameterKey: string, options: any) => {

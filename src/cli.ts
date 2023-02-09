@@ -36,6 +36,11 @@ import { ParamEvaluator } from "./core";
   await scaffold.templateScope.initialize();
 
   const templateName = scaffold.args.getTemplateName();
+
+  if (!templateName) {
+    // TODO info screen
+  }
+
   const template = scaffold.templateScope.getTemplates()[templateName];
   if (!template) {
     throw new Error(`No template registered with the name ${templateName}`);

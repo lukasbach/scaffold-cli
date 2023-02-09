@@ -1,16 +1,26 @@
 /* eslint-disable class-methods-use-this */
 export class Logger {
+  get logLevel() {
+    return scaffold.args.getOption("log-level");
+  }
+
   log(...values: any[]) {
     console.log(...values);
   }
 
   verbose(...values: any[]) {
-    // TODO only with verbose flag
+    if (this.logLevel !== "verbose" && this.logLevel !== "debug") {
+      return;
+    }
+
     console.debug(...values);
   }
 
   debug(...values: any[]) {
-    // TODO only with debug flag
+    if (this.logLevel !== "debug") {
+      return;
+    }
+
     console.debug(...values);
   }
 
