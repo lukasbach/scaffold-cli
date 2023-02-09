@@ -4,8 +4,13 @@ export class Logger {
     console.log(...values);
   }
 
-  debug(...values: any[]) {
+  verbose(...values: any[]) {
     // TODO only with verbose flag
+    console.debug(...values);
+  }
+
+  debug(...values: any[]) {
+    // TODO only with debug flag
     console.debug(...values);
   }
 

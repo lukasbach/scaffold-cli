@@ -41,9 +41,9 @@ import { ParamEvaluator } from "./core";
     throw new Error(`No template registered with the name ${templateName}`);
   }
 
-  scaffold.logger.debug(`Resolved template: ${template.sourceKey}`);
-  scaffold.logger.debug(`Template source: ${template.source}`);
-  scaffold.logger.debug(`Repository at: ${template.repoPath}`);
+  scaffold.logger.verbose(`Resolved template: ${template.sourceKey}`);
+  scaffold.logger.verbose(`Template source: ${template.source}`);
+  scaffold.logger.verbose(`Repository at: ${template.repoPath}`);
 
   const documentTemplate = scaffold.args.getOption("document-template");
   if (documentTemplate) {

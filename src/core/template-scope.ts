@@ -30,7 +30,7 @@ export class TemplateScope {
   }
 
   async initialize() {
-    const potentialTemplateRoots = [...this.getAllParentPaths(), os.homedir()];
+    const potentialTemplateRoots = [os.homedir(), ...this.getAllParentPaths()];
     const templateRoots = (
       await Promise.all(
         potentialTemplateRoots.map<Promise<TemplateRootData | null>>(async folder => {
@@ -46,9 +46,9 @@ export class TemplateScope {
       )
     ).filter(isNotNullish);
 
-    this.userTemplateRoot = templateRoots[templateRoots.length - 1];
     // eslint-disable-next-line prefer-destructuring
-    this.nearestTemplateRoot = templateRoots[0];
+    this.userTemplateRoot = templateRoots[0];
+    this.nearestTemplateRoot = templateRoots[templateRoots.length - 1];
 
     for (const templateRoot of templateRoots) {
       for (const repo of templateRoot.repositories ?? []) {
@@ -66,9 +66,13 @@ export class TemplateScope {
         const source = isUserTemplateRoot
           ? this.getGitFolder(relativeSource).localPath
           : path.join(path.dirname(templateRoot.path), relativeSource);
+        const repoPath = isUserTemplateRoot
+          ? this.getGitFolder(relativeSource).gitFolder
+          : path.dirname(templateRoot.path);
+        scaffold.logger.debug(`Registering explicitly defined template ${key} from ${repoPath}`);
         this.loadedTemplates[key] = {
           ...(typeof templateData === "string" ? {} : templateData),
-          repoPath: isUserTemplateRoot ? this.getGitFolder(relativeSource).gitFolder : path.dirname(templateRoot.path),
+          repoPath,
           sourceKey: relativeSource,
           source: await this.resolveTemplateSourceFilePath(source),
         };
@@ -184,7 +188,8 @@ export class TemplateScope {
 
   private async initRepository(templateRoot: TemplateRootData, repoPath: string) {
     const resolvedRepoPath = await this.resolveRepoPath(templateRoot, repoPath);
-    const isUserTemplateRoot = templateRoot.path === this.userTemplateRoot.path;
+
+    scaffold.logger.debug(`Initializing repo ${repoPath} and registering templates defined in there...`);
 
     await Promise.all(
       (
@@ -194,12 +199,19 @@ export class TemplateScope {
         .map(file => [file.name, path.join(resolvedRepoPath, file.name)])
         .map(async ([key, source]) => {
           const cleanedKey = path.basename(key, path.extname(key));
+          // console.log(
+          //   "!!",
+          //   repoPath,
+          //   resolvedRepoPath,
+          //   isUserTemplateRoot
+          //     ? this.getGitFolder(repoPath).localPath
+          //     : path.join(path.dirname(templateRoot.path), repoPath)
+          // );
+          scaffold.logger.debug(`Registering implicit template ${key} from ${resolvedRepoPath}`);
           this.loadedTemplates[cleanedKey] = {
             source: await this.resolveTemplateSourceFilePath(source),
             sourceKey: [repoPath, cleanedKey].join("/"),
-            repoPath: isUserTemplateRoot
-              ? this.getGitFolder(repoPath).localPath
-              : path.join(path.dirname(templateRoot.path), repoPath),
+            repoPath: resolvedRepoPath,
             repoMetaData: await this.loadRepoMetadata(resolvedRepoPath),
           };
         })

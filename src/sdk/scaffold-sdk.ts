@@ -261,7 +261,7 @@ export class ScaffoldSdk<
       if (!projectRoot) {
         throw new Error("Could not find a tsconfig.json in any parent folder");
       }
-      scaffold.logger.debug(`Found TypeScript Project root at ${projectRoot}`);
+      scaffold.logger.verbose(`Found TypeScript Project root at ${projectRoot}`);
       this.tsProject = new TsProject({
         tsConfigFilePath: path.join(projectRoot, "tsconfig.json"),
         skipAddingFilesFromTsConfig: true,
