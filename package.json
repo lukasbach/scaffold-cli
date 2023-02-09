@@ -18,7 +18,6 @@
   ],
   "scripts": {
     "start": "esr src/cli.ts",
-    "debug": "yarn start new react-fc \"My Component\"",
     "build": "run-s \"build:*\"",
     "build:esm": "tsc -m es2020 --outDir lib/esm",
     "build:esnext": "tsc -m esnext --outDir lib/esnext",

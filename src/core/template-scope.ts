@@ -14,7 +14,7 @@ type AllRepoData = {
 export class TemplateScope {
   private loadedTemplates: Record<
     string,
-    TemplateUsageDeclaration & { repoPath?: string; repoMetaData?: RepoMetaData; sourceKey: string }
+    TemplateUsageDeclaration & { repoPath: string; repoMetaData?: RepoMetaData; sourceKey: string }
   > = {};
 
   private repos: AllRepoData[] = [];
@@ -62,9 +62,13 @@ export class TemplateScope {
         if (!relativeSource) {
           throw new Error(`Source string of template ${key} is invalid`);
         }
-        const source = path.join(path.dirname(templateRoot.path), relativeSource);
+        const isUserTemplateRoot = templateRoot.path === this.userTemplateRoot.path;
+        const source = isUserTemplateRoot
+          ? this.getGitFolder(relativeSource).localPath
+          : path.join(path.dirname(templateRoot.path), relativeSource);
         this.loadedTemplates[key] = {
           ...(typeof templateData === "string" ? {} : templateData),
+          repoPath: isUserTemplateRoot ? this.getGitFolder(relativeSource).gitFolder : path.dirname(templateRoot.path),
           sourceKey: relativeSource,
           source: await this.resolveTemplateSourceFilePath(source),
         };
@@ -142,10 +146,7 @@ export class TemplateScope {
       return relativePath;
     }
 
-    const [owner, repo, ...folderPieces] = repoPath.split("/");
-    const gitFolderParent = path.join(fileNames.localReposDir, "repos");
-    const gitFolder = path.join(gitFolderParent, `${owner}-${repo}`);
-    const localPath = path.join(gitFolder, ...folderPieces);
+    const { localPath, gitFolder, gitFolderParent, owner, repo, folderPieces } = this.getGitFolder(repoPath);
     this.repos.push({ localPath, isRemote: true, gitFolder, ...(await this.loadRepoMetadata(localPath)) });
 
     if (fs.existsSync(localPath)) {
@@ -173,8 +174,17 @@ export class TemplateScope {
     return localPath;
   }
 
+  private getGitFolder(repoPath: string) {
+    const [owner, repo, ...folderPieces] = repoPath.split("/");
+    const gitFolderParent = path.join(fileNames.localReposDir, "repos");
+    const gitFolder = path.join(gitFolderParent, `${owner}-${repo}`);
+    const localPath = path.join(gitFolder, ...folderPieces);
+    return { gitFolder, localPath, gitFolderParent, owner, repo, folderPieces };
+  }
+
   private async initRepository(templateRoot: TemplateRootData, repoPath: string) {
     const resolvedRepoPath = await this.resolveRepoPath(templateRoot, repoPath);
+    const isUserTemplateRoot = templateRoot.path === this.userTemplateRoot.path;
 
     await Promise.all(
       (
@@ -187,7 +197,9 @@ export class TemplateScope {
           this.loadedTemplates[cleanedKey] = {
             source: await this.resolveTemplateSourceFilePath(source),
             sourceKey: [repoPath, cleanedKey].join("/"),
-            repoPath: path.join(this.cwd, repoPath),
+            repoPath: isUserTemplateRoot
+              ? this.getGitFolder(repoPath).localPath
+              : path.join(path.dirname(templateRoot.path), repoPath),
             repoMetaData: await this.loadRepoMetadata(resolvedRepoPath),
           };
         })

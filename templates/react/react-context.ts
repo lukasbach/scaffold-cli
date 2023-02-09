@@ -24,6 +24,7 @@ export default async () => {
   const sdk = scaffold.sdk().withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
   sdk.setTemplateName("React Context");
   sdk.setTemplateDescription("Description Text");
+  sdk.setDataProperty("propsWithChildren", false);
 
   const ctxName = await sdk.param
     .string("ctxName")

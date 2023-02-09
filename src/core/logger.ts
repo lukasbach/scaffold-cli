@@ -5,6 +5,7 @@ export class Logger {
   }
 
   debug(...values: any[]) {
+    // TODO only with verbose flag
     console.debug(...values);
   }
 
