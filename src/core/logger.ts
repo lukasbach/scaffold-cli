@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 export class Logger {
   get logLevel() {
-    return scaffold.args.getOption("log-level");
+    return scaffold.args.getOption("logLevel");
   }
 
   log(...values: any[]) {

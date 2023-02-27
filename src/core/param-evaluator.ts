@@ -65,6 +65,7 @@ export class ParamEvaluator {
       throw new Error(`Unknown parameter type ${param.type}`);
     })();
     if (!value) {
+      scaffold.logger.debug(`Parameter ${param.key} fell back to default value ${param.default}`);
       ParamEvaluator.defaultEvaluations++;
     }
     return value ?? param.default;

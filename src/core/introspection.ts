@@ -74,9 +74,9 @@ const manpageTemplate = noindent(`
   ${title("Scaffold Options")}
   
     -h,--help               - Display details on the template, i.e. this page
-    --document-template     - Create a markdown documentation for the template
+    --documentTemplate     - Create a markdown documentation for the template
     --all                   - Ask for all parameter values not provided as arguments, even those not required
-    --log-level=#           - Logging level. Choices: verbose, debug.
+    --logLevel=#           - Logging level. Choices: verbose, debug.
   `);
 
 const countParameterDefinition = (parameterKey: string, options: any) => {

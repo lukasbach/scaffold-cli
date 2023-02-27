@@ -50,7 +50,7 @@ import { ParamEvaluator } from "./core";
   scaffold.logger.verbose(`Template source: ${template.source}`);
   scaffold.logger.verbose(`Repository at: ${template.repoPath}`);
 
-  const documentTemplate = scaffold.args.getOption("document-template");
+  const documentTemplate = scaffold.args.getOption("documentTemplate");
   if (documentTemplate) {
     await scaffold.runner.introspectTemplate(template);
     await scaffold.introspection.documentTemplate(documentTemplate);
@@ -68,7 +68,7 @@ import { ParamEvaluator } from "./core";
 
   if (ParamEvaluator.defaultEvaluations > 0) {
     scaffold.logger.log(
-      `${ParamEvaluator.defaultEvaluations} parameters where not specified and fell back to default values. ` +
+      `${ParamEvaluator.defaultEvaluations} parameters were not specified and fell back to default values. ` +
         `Run "scaf ${templateName} --help" for details on all parameters.`
     );
   }
