@@ -152,4 +152,5 @@ export default async () => {
     .join("\n");
 
   await sdk.actions.addInlineTemplate(ctxFileTemplate, withReactImport("", combinedValueTemplate));
+  await sdk.actions.tsFormat();
 };

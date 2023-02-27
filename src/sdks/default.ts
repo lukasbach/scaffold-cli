@@ -55,28 +55,48 @@ export const createDefaultSdk = () => {
         await sdk.writeToTarget(targetPath, replacedContents);
       },
       tsAddImport: async (target: string, importDecl: OptionalKind<ImportDeclarationStructure>) => {
+        if (sdk.isIntrospectionRun) {
+          return;
+        }
+
         const file = await sdk.getTsSourceFile(target);
         file.addImportDeclaration(importDecl);
         await file.save();
         sdk.registerChangedFiles(target);
       },
       tsOrganizeImports: async (target: string) => {
+        if (sdk.isIntrospectionRun) {
+          return;
+        }
+
         const file = await sdk.getTsSourceFile(target);
         file.organizeImports();
         await file.save();
         sdk.registerChangedFiles(target);
       },
       tsAddListItem: async (target: string) => {
+        if (sdk.isIntrospectionRun) {
+          return;
+        }
+
         const file = await sdk.getTsSourceFile(target);
         console.log(file?.getAncestors());
         sdk.registerChangedFiles(target);
       },
       tsFormat: async () => {
+        if (sdk.isIntrospectionRun) {
+          return;
+        }
+
         (await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)))).forEach(file =>
           file?.formatText()
         );
       },
       eslint: async () => {
+        if (sdk.isIntrospectionRun) {
+          return;
+        }
+
         await $(`npx eslint --fix ${sdk.getChangedFiles().join(" ")}`);
       },
     })

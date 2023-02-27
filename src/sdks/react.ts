@@ -17,10 +17,7 @@ export const createReactSdk = () => {
           .list("propsType")
           .choices(["interface", "type", "inline"])
           .default("type")
-          .descr(
-            "The template will create a TypeScript type for the component props. This will determine " +
-              "whether the props type will be declared as interface, type, or inlined into the FC type generic parameter."
-          ),
+          .descr("Use an interface, a type, or an inline type for the props type?"),
       exportPropsType: () =>
         sdk.param.boolean("exportPropsType").default(true).descr("Determines if the props type will be exported."),
       dummyProp: () =>
@@ -28,7 +25,7 @@ export const createReactSdk = () => {
           .boolean("dummyProp")
           .default(false)
           .descr(
-            "If enabled, a sample property will be included in the prop type. This can help a subsequent " +
+            "Include a sample prop in the component prop? This can help a subsequent " +
               "linter fix call not to clear up the empty props type."
           ),
       propsWithChildren: () =>
@@ -38,8 +35,8 @@ export const createReactSdk = () => {
           .boolean("importReactSymbols")
           .default(false)
           .descr(
-            "If disabled, react symbols will be used like `React.FC`. If enabled, all react types and " +
-              "symbols used will be imported and directly used, like `FC`."
+            "Import all react types and symboles used, like `FC`? If disabled, react symbols will be " +
+              "used like `React.FC`."
           ),
       deconstructProps: () =>
         sdk.param
@@ -47,7 +44,7 @@ export const createReactSdk = () => {
           .default(true)
           .descr(
             "Deconstruct component props directly in the lambda parameters (`({ a, b }) => ...`) " +
-              "as opposed to using a single prop variable (`props => ...`)"
+              "as opposed to using a single prop variable (`props => ...`)?"
           ),
     })
     .withHelperSet({

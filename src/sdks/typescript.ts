@@ -22,8 +22,14 @@ export const createTypescriptSdk = () => {
       sdk.registerChangedFiles(target);
     },
     tsFormat: async () => {
-      (await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)))).forEach(file =>
-        file?.formatText()
+      const files = await Promise.all(sdk.getChangedFiles().map(file => sdk.getTsSourceFile(file)));
+      await Promise.all(
+        files.map(async file => {
+          if (file) {
+            file.formatText();
+            await file.save();
+          }
+        })
       );
     },
   });

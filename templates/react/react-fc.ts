@@ -31,4 +31,5 @@ export default async () => {
   sdk.setDataProperty("propsTypeSuffix", "Props");
   const fileName = await sdk.actions.filenameParameters(componentName, ["tsx", "ts", "jsx", "js"]);
   await sdk.actions.addInlineTemplate(fileName, componentTemplate);
+  await sdk.actions.tsFormat();
 };
