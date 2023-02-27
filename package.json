@@ -21,7 +21,7 @@
     "build": "run-s \"build:*\"",
     "build:esm": "tsc -m es2020 --outDir lib/esm",
     "build:esnext": "tsc -m esnext --outDir lib/esnext",
-    "test": "jest --passWithNoTests",
+    "test": "yarn start scaf-snap --repoName \"React Templates\" --failOnChange && yarn start scaf-snap --repoName \"Scaffold Core Commands\" --failOnChange",
     "lint": "eslint . --fix",
     "lint:test": "eslint .",
     "prepublishOnly": "yarn build",
