@@ -16,15 +16,16 @@ const snapTemplateConfig = async (template: TemplateUsageDeclaration) => {
 export default async () => {
   const sdk = scaffold.sdk().build();
   sdk.setTemplateName("Create snapshot dumps for all scaffold templates in a template repository.");
-  const repoName = await sdk.param
-    .list("repoName")
+  const repoKey = await sdk.param
+    .list("repo")
     .descr("Templates repo to create snapshots for")
     .required()
     .choices(
       scaffold.templateScope
         .getRepositories()
-        .filter(({ name }) => !!name)
-        .map<any>(r => r.name)
+        .filter(({ key }) => !!key)
+        .filter(({ isRemote }) => !isRemote)
+        .map<any>(r => r.key)
     );
   const target = await sdk.param.string("output").descr("Output path").default("./.scaffold-snapshots");
   const failOnChange = await sdk.param
@@ -32,7 +33,7 @@ export default async () => {
     .descr("Process should fail when a snapshot is different than before")
     .default(false);
   await sdk.do(async () => {
-    const repo = scaffold.templateScope.getRepositories().find(repo => repo.name === repoName);
+    const repo = scaffold.templateScope.getRepositories().find(repo => !repo.isRemote && repo.key === repoKey);
     const templates = Object.entries(scaffold.templateScope.getTemplates()).filter(
       ([_, t]) => t.repoPath === repo?.localPath
     );
@@ -74,7 +75,7 @@ export default async () => {
       const oldYaml = existsOldTemplate ? await fs.readFile(targetFile, { encoding: "utf8" }) : "";
 
       if (newYaml !== oldYaml && failOnChange) {
-        scaffold.logger.error(`Snapshot for ${templateKey} has changed`);
+        scaffold.logger.error(`ERR: Snapshot for ${templateKey} has changed`);
         process.exit(1);
       }
 

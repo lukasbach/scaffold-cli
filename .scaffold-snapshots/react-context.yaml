@@ -4,7 +4,7 @@ default:
 
 
     export type HelloWorldContextType = {
-      children: React.ReactNode
+
 
     }
 
@@ -26,7 +26,6 @@ placeTypeInDedicatedFile=true:
     import React from 'react';
 
     export type HelloWorldContextType = {
-      children: React.ReactNode
 
     }
   hello-world.context.tsx: >-
@@ -59,7 +58,7 @@ placeHookInDedicatedFile=true:
 
 
     export type HelloWorldContextType = {
-      children: React.ReactNode
+
 
     }
 
@@ -94,7 +93,7 @@ placeProviderInDedicatedFile=true:
 
 
     export type HelloWorldContextType = {
-      children: React.ReactNode
+
 
     }
 
@@ -108,7 +107,7 @@ exportPropsType=false:
 
 
     type HelloWorldContextType = {
-      children: React.ReactNode
+
 
     }
 
@@ -132,7 +131,6 @@ dummyProp=true:
 
     export type HelloWorldContextType = {
       dummy: string
-      children: React.ReactNode
 
     }
 
@@ -156,7 +154,7 @@ importReactSymbols=true:
 
 
     export type HelloWorldContextType = {
-      children: ReactNode
+
 
     }
 
@@ -179,7 +177,7 @@ deconstructProps=false:
 
 
     export type HelloWorldContextType = {
-      children: React.ReactNode
+
 
     }
 
