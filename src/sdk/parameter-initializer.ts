@@ -28,6 +28,7 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
   constructor(private key: string, private type: T, private sdk: ScaffoldSdk<any>) {}
 
   getConfig() {
+    const choices = this.possibleChoices?.sort((a, b) => `${a}`.localeCompare(`${b}`));
     return {
       type: this.type,
       isArgument: this.isArgument,
@@ -36,8 +37,8 @@ export class ParameterInitializer<T extends ParamType> implements Promise<ParamT
       description: this.description,
       optional: !this.isRequired,
       default: this.defaultValue,
-      choices: this.possibleChoices,
-      choicesText: this.possibleChoices
+      choices,
+      choicesText: choices
         ?.map(choice => (typeof choice === "string" ? choice : (choice as any).value))
         .filter(isNotNullish),
     };
