@@ -1,5 +1,5 @@
 {
-  "name": "scaffold-cli",
+  "name": "scaffoldcli",
   "version": "0.0.1",
   "description": "A templating tool for building reusable and configurable code templates in a central place.",
   "bin": {
@@ -26,7 +26,6 @@
     "lint:test": "eslint .",
     "clean": "rimraf ./lib/ ./exec/",
     "docs": "typedoc --out docs src/index.ts --excludeInternal",
-    "postinstall": "scaf update",
     "prepublishOnly": "yarn build && yarn start build-template-documentations && yarn test && yarn lint"
   },
   "devDependencies": {

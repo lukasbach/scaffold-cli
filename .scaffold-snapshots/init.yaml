@@ -52,7 +52,7 @@ default:
 
     # Install with
 
-    npm i -g scaffold-cli
+    npm i -g scaffoldcli
 
 
     # To create a new file from a template:

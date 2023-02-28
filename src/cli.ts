@@ -28,7 +28,7 @@ import { ParamEvaluator } from "./core";
 
   if (scaffold.args.getOption("version", "v")) {
     const { version } = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), { encoding: "utf-8" }));
-    console.log(`scaffold-cli ${version}`);
+    console.log(`scaffoldcli ${version}`);
     process.exit(0);
   }
 
@@ -76,7 +76,7 @@ import { ParamEvaluator } from "./core";
     } else {
       console.log(
         "ERROR: Something went wrong when evaluating the the template. Try running with `--logLevel debug` " +
-          "if you suspect this could be related to scaffold-cli."
+          "if you suspect this could be related to scaffoldcli."
       );
     }
     throw e;

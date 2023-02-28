@@ -8,9 +8,9 @@
 Install the package
 
 ```bash
-npm install scaffold-cli --save
+npm install scaffoldcli --save
 # or
-yarn add scaffold-cli
+yarn add scaffoldcli
 ```
 
 You can get started by adding the official react templates to the global template scope,
@@ -27,7 +27,7 @@ If you want to further customize how the template works, you could
   ```bash
   scaf react-fc "My Component Name" --propsType inline --propsWithChildren false
   ```
-* Require scaffold-cli to interactively ask for *all* parameters:
+* Require scaffold to interactively ask for *all* parameters:
   ```bash
   scaf react-fc --all
   ```
@@ -87,12 +87,12 @@ The following templates are core commands which are available by default.
 - [__Add a template repository to the template scope__: Description Text](/template-docs/core/add.md)
 
   `scaf add <repo> [-g,--global] `
-- [__Edit global Scaffold Config file scoped to the local user__: Description Text](/template-docs/core/edit-config.md)
-
-  `scaf edit-config `
 - [__Customize the default values for a template that is available in the current scope__: Description Text](/template-docs/core/customize.md)
 
   `scaf customize <template> [-g,--global] `
+- [__Edit global Scaffold Config file scoped to the local user__: Description Text](/template-docs/core/edit-config.md)
+
+  `scaf edit-config `
 - [__Initialize scaffold on a code repository__: Description Text](/template-docs/core/init.md)
 
   `scaf init --addToReadme --defaultRepos=# `
