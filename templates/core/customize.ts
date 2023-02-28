@@ -10,7 +10,7 @@ export default async () => {
     .asArgument()
     .choices(
       Object.entries(scaffold.templateScope.getTemplates())
-        .filter(([_, tpl]) => !tpl.repoMetaData?.internal)
+        .filter(([, tpl]) => !tpl.repoMetaData?.internal)
         .map(([key]) => key)
     )
     .required()

@@ -6,13 +6,13 @@ export default async () => {
   await sdk.do(async () => {
     scaffold.logger.output("Available Templates");
     Object.entries(scaffold.templateScope.getTemplates())
-      .filter(([_, t]) => !t.repoMetaData?.internal)
+      .filter(([, t]) => !t.repoMetaData?.internal)
       .forEach(([templateName]) => {
         scaffold.logger.output(`  ${templateName}`);
       });
     scaffold.logger.output("\nScaffold Commands");
     Object.entries(scaffold.templateScope.getTemplates())
-      .filter(([_, t]) => t.repoMetaData?.internal)
+      .filter(([, t]) => t.repoMetaData?.internal)
       .forEach(([templateName]) => {
         scaffold.logger.output(`  ${templateName}`);
       });

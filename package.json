@@ -24,10 +24,10 @@
     "test": "yarn start scaf-snap --repo react --failOnChange && yarn start scaf-snap --repo core --failOnChange",
     "lint": "eslint . --fix",
     "lint:test": "eslint .",
-    "prepublishOnly": "yarn build",
     "clean": "rimraf ./lib/ ./exec/",
     "docs": "typedoc --out docs src/index.ts --excludeInternal",
-    "postinstall": "scaf update"
+    "postinstall": "scaf update",
+    "prepublishOnly": "yarn build && yarn test && yarn lint"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.1",

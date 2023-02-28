@@ -1,11 +1,9 @@
 import * as esbuild from "esbuild";
 import path from "path";
 import * as handlebars from "handlebars";
-import fs from "fs-extra";
 import { fileNames, hash } from "../util";
 import { TemplateUsageDeclaration } from "../types";
 import { ScaffoldSdk } from "../sdk";
-import {SdkBuilder} from "../sdk/sdk-builder";
 
 export class Runner {
   private template: TemplateUsageDeclaration;

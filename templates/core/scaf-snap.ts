@@ -35,7 +35,7 @@ export default async () => {
   await sdk.do(async () => {
     const repo = scaffold.templateScope.getRepositories().find(repo => !repo.isRemote && repo.key === repoKey);
     const templates = Object.entries(scaffold.templateScope.getTemplates()).filter(
-      ([_, t]) => t.repoPath === repo?.localPath
+      ([, t]) => t.repoPath === repo?.localPath
     );
     for (const [templateKey, template] of templates) {
       const output: Record<string, object> = {};
