@@ -54,7 +54,7 @@ export class ScaffoldSdk<
         async (...params) => {
           scaffold.introspection.registerActionCall(actionKey);
 
-          if (scaffold.runner.getTemplate().omitActions?.includes(actionKey)) {
+          if (scaffold.runner.getTemplate()?.omitActions?.includes(actionKey)) {
             scaffold.logger.debug(`Skipping action ${actionKey} because it is explicitly omitted.`);
             return null as any;
           }
