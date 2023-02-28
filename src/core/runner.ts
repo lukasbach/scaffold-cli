@@ -21,8 +21,7 @@ export class Runner {
     this.targetPath = targetPath;
 
     const outfile = await this.buildTemplate(template);
-
-    await (await import(`file://${outfile}`)).default.default();
+    await (await import(outfile)).default();
 
     if (template.postActions?.length) {
       for (const action of template.postActions) {
