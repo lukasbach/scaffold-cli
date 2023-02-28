@@ -1,14 +1,14 @@
 {
   "name": "@lukasbach/scaffold",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A templating tool for building reusable and configurable code templates in a central place.",
   "bin": {
-    "scaf": "lib/esm/index.js"
+    "scaf": "lib/esm/src/index.js"
   },
-  "main": "lib/esm/index.js",
-  "module": "lib/esm/index.js",
-  "esnext": "lib/esnext/index.js",
-  "typings": "lib/esm/index.d.ts",
+  "main": "lib/esm/src/index.js",
+  "module": "lib/esm/src/index.js",
+  "esnext": "lib/esnext/src/index.js",
+  "typings": "lib/esm/index.src/d.ts",
   "repository": "https://github.com/lukasbach/scaffold-cli",
   "author": "Lukas Bach <npm@lukasbach.com>",
   "license": "MIT",
