@@ -1,5 +1,5 @@
 {
-  "name": "scaffoldcli",
+  "name": "@lukasbach/scaffold",
   "version": "0.0.1",
   "description": "A templating tool for building reusable and configurable code templates in a central place.",
   "bin": {

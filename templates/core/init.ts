@@ -34,7 +34,7 @@ const readmeAddition = noindent(`
   
   \`\`\`bash
   # Install with
-  npm i -g scaffoldcli
+  npm i -g @lukasbach/scaffold
   
   # To create a new file from a template:
   scaf template-name
