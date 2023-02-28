@@ -33,6 +33,12 @@ You can customize the default values for any template with `scaf customize templ
 ### Core Templates
 
 The following templates are core commands which are available by default.
+- [__Customize the default values for a template that is available in the current scope__: Description Text](/template-docs/core/customize.md)
+
+  `scaf customize <template> [-g,--global] `
+- [__Add a template repository to the template scope__: Description Text](/template-docs/core/add.md)
+
+  `scaf add <repo> [-g,--global] `
 - [__Edit global Scaffold Config file scoped to the local user__: Description Text](/template-docs/core/edit-config.md)
 
   `scaf edit-config `
@@ -44,7 +50,7 @@ The following templates are core commands which are available by default.
   `scaf list `
 - [__Create snapshot dumps for all scaffold templates in a template repository.__: Description Text](/template-docs/core/scaf-snap.md)
 
-  `scaf scaf-snap --repoName=# [--output=#] [--failOnChange] `
+  `scaf scaf-snap --repo=# [--output=#] [--failOnChange] `
 - [__Update local template repositories__: Description Text](/template-docs/core/update.md)
 
   `scaf update `
@@ -53,18 +59,15 @@ The following templates are core commands which are available by default.
 ### React Templates
 
 The following templates are available in the template scope when adding the `lukasbach/scaffold-cli/react` template repository.
-- [__List available templates__: undefined](/template-docs/react/input-tests.md)
+- [__React Context__: Description Text](/template-docs/react/react-context.md)
 
-  `scaf input-tests --string=# --number=# --list=# --checkbox=# --password=# --boolean --confirm=# --editor=# `
+  `scaf react-context <ctxName> [--propsTypeSuffix=#] [--contextVariableSuffix=#] [--fileExtension=#] [--placeTypeInDedicatedFile] [--placeHookInDedicatedFile] [--placeProviderInDedicatedFile] [--exportPropsType] [--dummyProp] [--importReactSymbols] [--deconstructProps] [--propsType=#] `
 - [__React FC__: Description Text](/template-docs/react/react-fc.md)
 
   `scaf react-fc <componentName> [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
 - [__React Component with forwarded ref__: Description Text](/template-docs/react/react-forward-ref.md)
 
   `scaf react-forward-ref <componentName> [--elementType=#] [--innerRef=#] [--includeUseRef] [--includeUseImperativeHandle] [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
-- [__React Context__: Description Text](/template-docs/react/react-context.md)
-
-  `scaf react-context <ctxName> [--propsTypeSuffix=#] [--contextVariableSuffix=#] [--fileExtension=#] [--placeTypeInDedicatedFile] [--placeHookInDedicatedFile] [--placeProviderInDedicatedFile] [--exportPropsType] [--dummyProp] [--importReactSymbols] [--deconstructProps] [--propsType=#] `
 
 
 <!-- /TEMPLATE_LIST -->
