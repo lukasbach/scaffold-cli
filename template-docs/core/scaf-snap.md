@@ -1,8 +1,8 @@
-## Template Create snapshot dumps for all scaffold templates in a template repository.
+## Template Create Snapshots
 
 > `scaf build-template-documentations --repo=# [--output=#] [--failOnChange] `
 
-Description Text
+Create snapshot dumps for all scaffold templates in a template repository.
 
 ### Parameters
 

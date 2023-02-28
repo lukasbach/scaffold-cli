@@ -9,7 +9,8 @@ const defaultContent = noindent(`
 
 export default async () => {
   const sdk = scaffold.sdk().build();
-  sdk.setTemplateName("Edit global Scaffold Config file scoped to the local user");
+  sdk.setTemplateName("Edit Config");
+  sdk.setTemplateDescription("Edit global Scaffold Config file scoped to the local user");
   await sdk.do(async () => {
     const file = path.join(os.homedir(), ".scaf.yml");
     const contents = (await fs.exists(file)) ? await fs.readFile(file, { encoding: "utf-8" }) : defaultContent;

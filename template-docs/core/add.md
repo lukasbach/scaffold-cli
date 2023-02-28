@@ -1,8 +1,8 @@
-## Template Add a template repository to the template scope
+## Template Add Template Repo
 
 > `scaf build-template-documentations <repo> [-g,--global] `
 
-Description Text
+Add a template repository to the template scope
 
 ### Parameters
 

@@ -2,7 +2,8 @@ import "../../src/globals";
 
 export default async () => {
   const sdk = scaffold.sdk().build();
-  sdk.setTemplateName("List available templates");
+  sdk.setTemplateName("List templates");
+  sdk.setTemplateDescription("List all available templates");
   await sdk.do(async () => {
     scaffold.logger.output("Available Templates");
     Object.entries(scaffold.templateScope.getTemplates())

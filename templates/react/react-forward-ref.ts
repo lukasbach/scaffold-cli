@@ -24,8 +24,8 @@ const componentTemplate = noindent(`
 
 export default async () => {
   const sdk = scaffold.sdk().withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
-  sdk.setTemplateName("React Component with forwarded ref");
-  sdk.setTemplateDescription("Description Text");
+  sdk.setTemplateName("React Forwarded Ref");
+  sdk.setTemplateDescription("React Component with forwarded ref");
   await sdk.param.string("elementType").default("div").descr("The HTML element type used for the forwarded ref");
   await sdk.param.string("innerRef").default("elementRef").descr("The name of the variable used in the useRef call.");
   const includeUseRef = await sdk.param

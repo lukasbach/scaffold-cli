@@ -2,7 +2,7 @@
 
 > `scaf build-template-documentations <componentName> [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
 
-Description Text
+React Functional Component
 
 ### Parameters
 

@@ -1,8 +1,8 @@
-## Template List available templates
+## Template List templates
 
 > `scaf build-template-documentations `
 
-Description Text
+List all available templates
 
 ### Parameters
 

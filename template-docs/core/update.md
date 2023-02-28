@@ -1,8 +1,8 @@
-## Template Update local template repositories
+## Template Update templates
 
 > `scaf build-template-documentations `
 
-Description Text
+Update local template repositories
 
 ### Parameters
 

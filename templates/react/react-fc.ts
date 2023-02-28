@@ -19,7 +19,7 @@ const componentTemplate = noindent(`
 export default async () => {
   const sdk = scaffold.sdk().withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
   sdk.setTemplateName("React FC");
-  sdk.setTemplateDescription("Description Text");
+  sdk.setTemplateDescription("React Functional Component");
   const componentName = await sdk.param.componentName();
   await sdk.param.dummyProp();
   await sdk.param.exportPropsType();

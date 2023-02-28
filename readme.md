@@ -84,25 +84,25 @@ You can customize the default values for any template with `scaf customize templ
 ### Core Templates
 
 The following templates are core commands which are available by default.
-- [__Add a template repository to the template scope__: Description Text](/template-docs/core/add.md)
+- [__Add Template Repo__: Add a template repository to the template scope](/template-docs/core/add.md)
 
   `scaf add <repo> [-g,--global] `
-- [__Customize the default values for a template that is available in the current scope__: Description Text](/template-docs/core/customize.md)
+- [__Customize Template__: Customize the default values for a template that is available in the current scope](/template-docs/core/customize.md)
 
   `scaf customize <template> [-g,--global] `
-- [__Edit global Scaffold Config file scoped to the local user__: Description Text](/template-docs/core/edit-config.md)
+- [__Edit Config__: Edit global Scaffold Config file scoped to the local user](/template-docs/core/edit-config.md)
 
   `scaf edit-config `
-- [__Initialize scaffold on a code repository__: Description Text](/template-docs/core/init.md)
+- [__Initialize__: Initialize a scaffold config on a code repository](/template-docs/core/init.md)
 
   `scaf init --addToReadme --defaultRepos=# `
-- [__List available templates__: Description Text](/template-docs/core/list.md)
+- [__List templates__: List all available templates](/template-docs/core/list.md)
 
   `scaf list `
-- [__Create snapshot dumps for all scaffold templates in a template repository.__: Description Text](/template-docs/core/scaf-snap.md)
+- [__Create Snapshots__: Create snapshot dumps for all scaffold templates in a template repository.](/template-docs/core/scaf-snap.md)
 
   `scaf scaf-snap --repo=# [--output=#] [--failOnChange] `
-- [__Update local template repositories__: Description Text](/template-docs/core/update.md)
+- [__Update templates__: Update local template repositories](/template-docs/core/update.md)
 
   `scaf update `
 
@@ -110,13 +110,13 @@ The following templates are core commands which are available by default.
 ### React Templates
 
 The following templates are available in the template scope when adding the `lukasbach/scaffold-cli/react` template repository.
-- [__React FC__: Description Text](/template-docs/react/react-fc.md)
-
-  `scaf react-fc <componentName> [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
-- [__React Context__: Description Text](/template-docs/react/react-context.md)
+- [__React Context__: A React context instance with context provider, hook and context type](/template-docs/react/react-context.md)
 
   `scaf react-context <ctxName> [--propsTypeSuffix=#] [--contextVariableSuffix=#] [--fileExtension=#] [--placeTypeInDedicatedFile] [--placeHookInDedicatedFile] [--placeProviderInDedicatedFile] [--exportPropsType] [--dummyProp] [--importReactSymbols] [--deconstructProps] [--propsType=#] `
-- [__React Component with forwarded ref__: Description Text](/template-docs/react/react-forward-ref.md)
+- [__React FC__: React Functional Component](/template-docs/react/react-fc.md)
+
+  `scaf react-fc <componentName> [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
+- [__React Forwarded Ref__: React Component with forwarded ref](/template-docs/react/react-forward-ref.md)
 
   `scaf react-forward-ref <componentName> [--elementType=#] [--innerRef=#] [--includeUseRef] [--includeUseImperativeHandle] [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
 
@@ -129,4 +129,4 @@ The following templates are available in the template scope when adding the `luk
 - `yarn start` to run the CLI
 - `yarn lint` to test and fix linter errors
 
-To publish a new version, `npm publish` is currently used.
+To publish a new version, `npm publish --access=public` is currently used.

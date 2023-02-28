@@ -3,7 +3,8 @@ import writeYaml from "write-yaml";
 
 export default async () => {
   const sdk = scaffold.sdk().build();
-  sdk.setTemplateName("Customize the default values for a template that is available in the current scope");
+  sdk.setTemplateName("Customize Template");
+  sdk.setTemplateDescription("Customize the default values for a template that is available in the current scope");
   const template = await sdk.param
     .list("template")
     .descr("Template to customize")

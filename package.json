@@ -2,9 +2,7 @@
   "name": "@lukasbach/scaffold",
   "version": "0.0.1",
   "description": "A templating tool for building reusable and configurable code templates in a central place.",
-  "bin": {
-    "scaffold": "lib/cjs/index.js"
-  },
+  "bin": "lib/cjs/index.js",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
   "esnext": "lib/esnext/index.js",

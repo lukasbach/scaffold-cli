@@ -23,7 +23,7 @@ const withReactImport = (prefix: string, tpl: string) => `${prefix}{{{ reactImpo
 export default async () => {
   const sdk = scaffold.sdk().withDefaultCapabilities().withReactCapabilities().withJavaScriptCapabilities().build();
   sdk.setTemplateName("React Context");
-  sdk.setTemplateDescription("Description Text");
+  sdk.setTemplateDescription("A React context instance with context provider, hook and context type");
   sdk.setDataProperty("propsWithChildren", false);
 
   const ctxName = await sdk.param

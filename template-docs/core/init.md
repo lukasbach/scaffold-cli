@@ -1,8 +1,8 @@
-## Template Initialize scaffold on a code repository
+## Template Initialize
 
 > `scaf build-template-documentations --addToReadme --defaultRepos=# `
 
-Description Text
+Initialize a scaffold config on a code repository
 
 ### Parameters
 

@@ -2,7 +2,7 @@
 
 > `scaf build-template-documentations <ctxName> [--propsTypeSuffix=#] [--contextVariableSuffix=#] [--fileExtension=#] [--placeTypeInDedicatedFile] [--placeHookInDedicatedFile] [--placeProviderInDedicatedFile] [--exportPropsType] [--dummyProp] [--importReactSymbols] [--deconstructProps] [--propsType=#] `
 
-Description Text
+A React context instance with context provider, hook and context type
 
 ### Parameters
 

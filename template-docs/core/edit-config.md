@@ -1,8 +1,8 @@
-## Template Edit global Scaffold Config file scoped to the local user
+## Template Edit Config
 
 > `scaf build-template-documentations `
 
-Description Text
+Edit global Scaffold Config file scoped to the local user
 
 ### Parameters
 

@@ -1,8 +1,8 @@
-## Template React Component with forwarded ref
+## Template React Forwarded Ref
 
 > `scaf build-template-documentations <componentName> [--elementType=#] [--innerRef=#] [--includeUseRef] [--includeUseImperativeHandle] [--dummyProp] [--exportPropsType] [--importReactSymbols] [--propsType=#] [--propsWithChildren] [--deconstructProps] [--filenameCase=#] [--fileExtension=#] `
 
-Description Text
+React Component with forwarded ref
 
 ### Parameters
 
