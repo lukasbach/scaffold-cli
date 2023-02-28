@@ -8,9 +8,7 @@
 Install the package
 
 ```bash
-npm install @lukasbach/scaffold --save
-# or
-yarn add @lukasbach/scaffold
+npm i -g @lukasbach/scaffold
 ```
 
 You can get started by adding the official react templates to the global template scope,
