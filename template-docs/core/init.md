@@ -11,7 +11,7 @@ Initialize a scaffold config on a code repository
   * Default: `true`
 * `defaultRepos`: _Do you want to add any suggested templates repositories?_
   * Usage: `--defaultRepos=#`
-  * Choices: `lukasbach/scaffold-cli/templates/web`, `lukasbach/scaffold-cli/templates/test`, `lukasbach/scaffold-cli/templates/react`, `lukasbach/scaffold-cli/templates/monorepo`
+  * Choices: `lukasbach/scaffold-cli/templates/monorepo`, `lukasbach/scaffold-cli/templates/react`, `lukasbach/scaffold-cli/templates/test`, `lukasbach/scaffold-cli/templates/web`
 
 ### Outputs
 

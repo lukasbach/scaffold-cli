@@ -17,7 +17,7 @@ A React context instance with context provider, hook and context type
   * Default: `Context`
 * `fileExtension?`
   * Usage: `--fileExtension=#`
-  * Choices: `tsx`, `ts`, `jsx`, `js`
+  * Choices: `js`, `jsx`, `ts`, `tsx`
   * Default: `tsx`
 * `placeTypeInDedicatedFile?`: _Should the context props type be placed in a different file than the actual context instance?_
   * Usage: `--placeTypeInDedicatedFile`
@@ -37,7 +37,7 @@ A React context instance with context provider, hook and context type
   * Default: `true`
 * `propsType?`: _Should the type for the context props be declared as type, interface, or inline?_
   * Usage: `--propsType=#`
-  * Choices: `interface`, `type`, `inline`
+  * Choices: `inline`, `interface`, `type`
   * Default: `type`
 
 ### Outputs

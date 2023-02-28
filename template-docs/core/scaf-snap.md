@@ -8,7 +8,7 @@ Create snapshot dumps for all scaffold templates in a template repository.
 
 * `repo`: _Templates repo to create snapshots for_
   * Usage: `--repo=#`
-  * Choices: `react`, `core`, `internal`
+  * Choices: `core`, `internal`, `react`
 * `output?`: _Output path_
   * Usage: `--output=#`
   * Default: `./.scaffold-snapshots`

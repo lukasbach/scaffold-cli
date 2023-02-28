@@ -18,7 +18,7 @@ React Functional Component
   * Usage: `--importReactSymbols`
 * `propsType?`: _Use an interface, a type, or an inline type for the props type?_
   * Usage: `--propsType=#`
-  * Choices: `interface`, `type`, `inline`
+  * Choices: `inline`, `interface`, `type`
   * Default: `type`
 * `propsWithChildren?`: _Include a children prop in the component props._
   * Usage: `--propsWithChildren`
@@ -32,7 +32,7 @@ React Functional Component
   * Default: `paramCase`
 * `fileExtension?`: _Extension of the file created_
   * Usage: `--fileExtension=#`
-  * Choices: `tsx`, `ts`, `jsx`, `js`
+  * Choices: `js`, `jsx`, `ts`, `tsx`
   * Default: `tsx`
 
 ### Outputs
