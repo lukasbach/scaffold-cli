@@ -35,6 +35,8 @@ export type ParamTypeMap = {
 export type TemplateUsageDeclaration = {
   source: string;
   defaults?: Record<string, ParamTypeMap[keyof ParamTypeMap]>;
+  omitActions?: string[];
+  postActions?: string[];
 };
 
 export type TemplateRootData = TemplateRootYaml & { path: string };

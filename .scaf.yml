@@ -11,3 +11,7 @@ templates:
       dummyProp: true
       filenameCase: snakeCase
       fileExtension: ts
+    omitActions:
+      - tsFormat
+    postActions:
+      - eslint

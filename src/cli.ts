@@ -64,7 +64,23 @@ import { ParamEvaluator } from "./core";
     process.exit(0);
   }
 
-  await scaffold.runner.runTemplate(template, process.cwd());
+  try {
+    await scaffold.runner.runTemplate(template, process.cwd());
+  } catch (e) {
+    if (template.omitActions?.length) {
+      console.log(
+        "ERROR: Something went wrong when evaluating the the template. Note that the used template explicitly " +
+          "disabled actions, which might have been required for the evaluation of the template. Try not omitting them " +
+          "to see if this resolves the issue."
+      );
+    } else {
+      console.log(
+        "ERROR: Something went wrong when evaluating the the template. Try running with `--logLevel debug` " +
+          "if you suspect this could be related to scaffold-cli."
+      );
+    }
+    throw e;
+  }
 
   if (ParamEvaluator.defaultEvaluations > 0) {
     scaffold.logger.log(

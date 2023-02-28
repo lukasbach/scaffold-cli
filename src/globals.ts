@@ -7,6 +7,7 @@ import type * as osLib from "os";
 import type * as yamlLib from "yaml";
 import type * as changeCaseLib from "change-case";
 import type { scaffold as scaffoldLib } from "./scaffold";
+import { ScaffoldSdk } from "./sdk";
 
 declare global {
   var scaffold: typeof scaffoldLib;
@@ -18,4 +19,5 @@ declare global {
   var os: typeof osLib;
   var yaml: typeof yamlLib;
   var changeCase: typeof changeCaseLib;
+  var lastSdk: ScaffoldSdk;
 }

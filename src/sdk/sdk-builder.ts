@@ -22,6 +22,7 @@ export class SdkBuilder<T extends RuntimeData> {
   }
 
   build() {
+    global.lastSdk = this.sdk;
     return this.sdk as ScaffoldSdk<T>;
   }
 
