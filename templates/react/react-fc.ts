@@ -32,5 +32,4 @@ export default async () => {
   const fileName = await sdk.actions.filenameParameters(componentName, ["tsx", "ts", "jsx", "js"]);
   await sdk.actions.addInlineTemplate(fileName, componentTemplate);
   await sdk.actions.tsFormat();
-  const v = (await fs.readJSON("package.json")).version;
 };
