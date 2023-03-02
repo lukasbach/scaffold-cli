@@ -2,6 +2,7 @@
 
 > A templating tool for building reusable and configurable code templates in a central place.
 
+![Scaffold CLI Demo](./demo.gif "Scaffold CLI Demo")
 
 ## How to use
 
