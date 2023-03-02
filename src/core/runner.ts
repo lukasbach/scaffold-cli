@@ -49,7 +49,7 @@ export class Runner {
     this.changedFiles.clear();
     const outfile = await this.buildTemplate(template);
     scaffold.introspection.startIntrospection();
-    await (await import(`file://${outfile}`)).default.default();
+    await (await import(outfile)).default();
     scaffold.introspection.endIntrospection();
   }
 
