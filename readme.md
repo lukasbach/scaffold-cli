@@ -259,5 +259,6 @@ You can create this quickly by running `scaf customize`.
 - `yarn` to install dependencies
 - `yarn start` to run the CLI
 - `yarn lint` to test and fix linter errors
+- `yarn test` to check if template outputs have changed
 
 To publish a new version, `npm publish --access=public` is currently used.
