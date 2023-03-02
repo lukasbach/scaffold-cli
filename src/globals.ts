@@ -11,7 +11,7 @@ import { ScaffoldSdk } from "./sdk";
 
 declare global {
   var scaffold: typeof scaffoldLib;
-  var $: typeof execaLib.execaCommand;
+  var $: typeof execaLib;
   var execa: typeof execaLib;
   var git: typeof gitLib;
   var fs: typeof fsLib;

@@ -8,7 +8,7 @@ import { ParamEvaluator } from "./core";
 
 (async () => {
   global.scaffold = scaffold;
-  global.execa = await import("execa");
+  global.execa = (await import("execa")).default;
   global.git = await import("simple-git");
   global.fs = fs;
   global.path = path;
@@ -21,7 +21,7 @@ import { ParamEvaluator } from "./core";
       return null;
     }
     scaffold.logger.log(`Running ${cmd}`);
-    return global.execa.execaCommand(cmd, opts);
+    return global.execa(cmd, opts);
   }) as any;
 
   await fs.ensureDir(fileNames.tempDir);
