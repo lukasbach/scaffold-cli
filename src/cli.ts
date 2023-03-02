@@ -2,9 +2,16 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
+import noindent from "noindent";
 import { fileNames } from "./util";
 import { scaffold } from "./scaffold";
 import { ParamEvaluator } from "./core";
+
+const hello = noindent(`
+  scaffold cli
+  
+  Run "scaf list" to list available templates and commands.
+  `);
 
 (async () => {
   global.scaffold = scaffold;
@@ -38,7 +45,8 @@ import { ParamEvaluator } from "./core";
   const templateName = scaffold.args.getTemplateName();
 
   if (!templateName) {
-    // TODO info screen
+    console.log(hello);
+    process.exit(0);
   }
 
   const template = scaffold.templateScope.getTemplates()[templateName];
