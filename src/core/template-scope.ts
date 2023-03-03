@@ -50,6 +50,12 @@ export class TemplateScope {
     this.userTemplateRoot = templateRoots[0];
     this.nearestTemplateRoot = templateRoots[templateRoots.length - 1];
 
+    const coreRepo = "lukasbach/scaffold-cli/templates/core";
+    await this.initRepository(
+      { repositories: [coreRepo], path: os.homedir(), isInternal: true, templates: {} },
+      coreRepo
+    );
+
     for (const templateRoot of templateRoots) {
       for (const repo of templateRoot.repositories ?? []) {
         await this.initRepository(templateRoot, repo);
@@ -107,10 +113,10 @@ export class TemplateScope {
     let cmd: ExecaChildProcess<string> | null = null;
     if (topLevelFiles.includes("yarn.lock")) {
       scaffold.logger.log(`Updating dependencies for ${gitFolder} with yarn...`);
-      cmd = $("yarn", { cwd: gitFolder });
+      cmd = $("yarn", { cwd: gitFolder, stdout: "ignore" });
     } else if (topLevelFiles.includes("package.json")) {
       scaffold.logger.log(`Updating dependencies for ${gitFolder} with npm install...`);
-      cmd = $("npm install", { cwd: gitFolder });
+      cmd = $("npm install", { cwd: gitFolder, stdout: "ignore" });
     }
     cmd?.stdout?.pipe(process.stdout);
     cmd?.stderr?.pipe(process.stderr);
@@ -167,7 +173,8 @@ export class TemplateScope {
     await fs.ensureDir(gitFolderParent);
 
     const githubHost = `https://github.com/${owner}/${repo}.git`;
-    console.log(`Cloning ${githubHost} to ${gitFolder}...`);
+    scaffold.logger.log(`Template Repository ${repoPath} is prepared for the first time, this can take a while...`);
+    scaffold.logger.log(`Cloning ${githubHost} to ${gitFolder}...`);
     await simpleGit().clone(githubHost, gitFolder);
     await this.installRepoDeps(gitFolder);
 
