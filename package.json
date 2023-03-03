@@ -1,6 +1,6 @@
 {
   "name": "@lukasbach/scaffold",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A templating tool for building reusable and configurable code templates in a central place.",
   "bin": {
     "scaf": "lib/cjs/src/cli.js"

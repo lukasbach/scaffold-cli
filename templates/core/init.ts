@@ -59,10 +59,10 @@ export default async () => {
     .default([])
     .required()
     .choices([
-      "lukasbach/scaffold-cli/templates/web", // TODO packagejson, github actions, github community standards, webpack?, tsconfig,
-      "lukasbach/scaffold-cli/templates/test",
+      // "lukasbach/scaffold-cli/templates/web", // TODO packagejson, github actions, github community standards, webpack?, tsconfig,
+      // "lukasbach/scaffold-cli/templates/test",
       "lukasbach/scaffold-cli/templates/react", // TODO hook file, redux?, storybook,
-      "lukasbach/scaffold-cli/templates/monorepo",
+      // "lukasbach/scaffold-cli/templates/monorepo",
     ]);
 
   // TODO offer to prepare local template folder
