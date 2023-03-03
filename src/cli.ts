@@ -27,7 +27,7 @@ const hello = noindent(`
     if (scaffold.introspection.isIntrospectionRun) {
       return null;
     }
-    scaffold.logger.log(`Running ${cmd}`);
+    scaffold.logger.verbose(`Running $ ${cmd}`);
     return global.execa(cmd, opts);
   }) as any;
 
