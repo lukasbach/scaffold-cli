@@ -26,7 +26,14 @@ export class TemplateScope {
   constructor(private cwd: string) {}
 
   async ensureUserTemplateRoot() {
-    // TODO
+    const userRootFile = path.join(os.homedir(), fileNames.templateRoot);
+    if (!fs.existsSync(userRootFile)) {
+      await fs.writeFile(
+        userRootFile,
+        "# Add template repositories that should be available everywhere on your system here:\n" +
+          "templates:\n#  - lukasbach/scaffold-cli/templates/react"
+      );
+    }
   }
 
   async initialize() {
@@ -64,22 +71,20 @@ export class TemplateScope {
 
     for (const templateRoot of templateRoots) {
       for (const [key, templateData] of Object.entries(templateRoot.templates ?? {})) {
-        const relativeSource = typeof templateData === "string" ? templateData : templateData.source;
-        if (!relativeSource) {
+        const sourcePath = typeof templateData === "string" ? templateData : templateData.source;
+        if (!sourcePath) {
           throw new Error(`Source string of template ${key} is invalid`);
         }
-        const isUserTemplateRoot = templateRoot.path === this.userTemplateRoot.path;
-        const source = isUserTemplateRoot
-          ? this.getGitFolder(relativeSource).localPath
-          : path.join(path.dirname(templateRoot.path), relativeSource);
-        const repoPath = isUserTemplateRoot
-          ? this.getGitFolder(relativeSource).gitFolder
-          : path.dirname(templateRoot.path);
+        const isRelativeSource = sourcePath.startsWith(".");
+        const source = isRelativeSource
+          ? path.join(path.dirname(templateRoot.path), sourcePath)
+          : this.getGitFolder(sourcePath).localPath;
+        const repoPath = isRelativeSource ? path.dirname(templateRoot.path) : this.getGitFolder(sourcePath).gitFolder;
         scaffold.logger.debug(`Registering explicitly defined template ${key} from ${repoPath}`);
         this.loadedTemplates[key] = {
           ...(typeof templateData === "string" ? {} : templateData),
           repoPath,
-          sourceKey: relativeSource,
+          sourceKey: sourcePath,
           source: await this.resolveTemplateSourceFilePath(source),
         };
       }
@@ -112,10 +117,10 @@ export class TemplateScope {
     const topLevelFiles = await fs.readdir(gitFolder);
     let cmd: ExecaChildProcess<string> | null = null;
     if (topLevelFiles.includes("yarn.lock")) {
-      scaffold.logger.log(`Updating dependencies for ${gitFolder} with yarn...`);
+      scaffold.logger.debug(`Updating dependencies for ${gitFolder} with yarn...`);
       cmd = $("yarn", { cwd: gitFolder, stdout: "ignore" });
     } else if (topLevelFiles.includes("package.json")) {
-      scaffold.logger.log(`Updating dependencies for ${gitFolder} with npm install...`);
+      scaffold.logger.debug(`Updating dependencies for ${gitFolder} with npm install...`);
       cmd = $("npm install", { cwd: gitFolder, stdout: "ignore" });
     }
     cmd?.stdout?.pipe(process.stdout);
@@ -174,7 +179,7 @@ export class TemplateScope {
 
     const githubHost = `https://github.com/${owner}/${repo}.git`;
     scaffold.logger.log(`Template Repository ${repoPath} is prepared for the first time, this can take a while...`);
-    scaffold.logger.log(`Cloning ${githubHost} to ${gitFolder}...`);
+    scaffold.logger.debug(`Cloning ${githubHost} to ${gitFolder}...`);
     await simpleGit().clone(githubHost, gitFolder);
     await this.installRepoDeps(gitFolder);
 
