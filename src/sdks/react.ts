@@ -56,7 +56,8 @@ export const createReactSdk = () => {
         if (reactImports.length === 0 || !importReactSymbols) {
           return "import React from 'react';";
         }
-        return `import React, { ${reactImports.join(", ")} } from "react";`;
+        const uniqueImports = [...new Set(reactImports)];
+        return `import React, { ${uniqueImports.join(", ")} } from "react";`;
       },
       reactSymbol(symbolName: string, options) {
         return options.data.root.importReactSymbols ? symbolName : `React.${symbolName}`;
