@@ -149,8 +149,7 @@ dummyProp=true:
     }
 importReactSymbols=true:
   hello-world.tsx: >-
-    import React, { ReactNode, useContext, FC, ReactNode, createContext } from
-    "react";
+    import React, { ReactNode, useContext, FC, createContext } from "react";
 
 
     export type HelloWorldContextType = {
