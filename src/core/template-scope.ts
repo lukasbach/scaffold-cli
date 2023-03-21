@@ -31,7 +31,7 @@ export class TemplateScope {
       await fs.writeFile(
         userRootFile,
         "# Add template repositories that should be available everywhere on your system here:\n" +
-          "templates:\n#  - lukasbach/scaffold-cli/templates/react"
+          "repositories:\n#  - lukasbach/scaffold-cli/templates/react"
       );
     }
   }

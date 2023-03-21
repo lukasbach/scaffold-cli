@@ -93,7 +93,7 @@ const hello = noindent(`
   if (ParamEvaluator.defaultEvaluations > 0) {
     scaffold.logger.log(
       `${ParamEvaluator.defaultEvaluations} parameters were not specified and fell back to default values. ` +
-        `Run "scaf ${templateName} --help" for details on all parameters.`
+        `Run "scaf ${templateName} -h" for details on all parameters.`
     );
   }
 })();
